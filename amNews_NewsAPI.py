@@ -24,7 +24,7 @@ newsapi = NewsApiClient(api_key=api_key_newsAPI)
 base_key = os.environ.get("PRIVATE_BASE_KEY")
 table_name_news = os.environ.get("PRIVATE_TABLE_NAME_NEWSPAYLOAD") #What to pull
 table_name_dump = os.environ.get("PRIVATE_TABLE_NAME_SERVICEDUMP") #Output dump
-api_key = os.environ.get("PRIVATE_API_KEY_AIRTABLE")
+api_key_airtable = os.environ.get("PRIVATE_API_KEY_AIRTABLE")
 airtable_news = Airtable(base_key, table_name_news, api_key_airtable)
 airtable_dump = Airtable(base_key, table_name_dump, api_key_airtable)
 

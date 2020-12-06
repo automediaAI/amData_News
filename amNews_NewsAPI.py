@@ -17,22 +17,19 @@ from newsapi import NewsApiClient # pip install newsapi-python (not newsapi - th
 from datetime import date, datetime, timedelta
 
 # NewsAPI Settings
-# api_key_newsAPI = os.environ.get("PRIVATE_API_KEY_NEWSAPI")
-# newsapi = NewsApiClient(api_key=api_key_newsAPI)
-newsapi = NewsApiClient(api_key='cf82bb056f264d228fa0a959481a332c') #Delete in prod
+api_key_newsAPI = os.environ.get("PRIVATE_API_KEY_NEWSAPI")
+newsapi = NewsApiClient(api_key=api_key_newsAPI)
 
 # Airtable settings 
-# base_key = os.environ.get("PRIVATE_BASE_KEY")
-# table_name_news = os.environ.get("PRIVATE_TABLE_NAME_NEWSPAYLOAD") #What to pull
-# table_name_dump = os.environ.get("PRIVATE_TABLE_NAME_SERVICEDUMP") #Output dump
-# api_key_Airtable = os.environ.get("PRIVATE_API_KEY_AIRTABLE")
-# airtable_news = Airtable(base_key, table_name_news, api_key)
-# airtable_dump = Airtable(base_key, table_name_dump, api_key)
-airtable_news = Airtable("app1GvM6I6bnrucdP", "amPayload_News", "keyuziq0Tc5OPKbIP")
-airtable_dump = Airtable("app1GvM6I6bnrucdP", "serviceDataDump", "keyuziq0Tc5OPKbIP")
+base_key = os.environ.get("PRIVATE_BASE_KEY")
+table_name_news = os.environ.get("PRIVATE_TABLE_NAME_NEWSPAYLOAD") #What to pull
+table_name_dump = os.environ.get("PRIVATE_TABLE_NAME_SERVICEDUMP") #Output dump
+api_key = os.environ.get("PRIVATE_API_KEY_AIRTABLE")
+airtable_news = Airtable(base_key, table_name_news, api_key_airtable)
+airtable_dump = Airtable(base_key, table_name_dump, api_key_airtable)
 
 # Function for calling NewsAPI 
-def newscaller(input_config):
+def newscaller(input_config, queryName):
 	newscaller_config = input_config #just from older code
 	endpoint = newscaller_config['endpoint'].lower()
 	query_config = newscaller_config['query']
@@ -61,6 +58,8 @@ def newscaller(input_config):
 		articlecount += 1
 		output_article_single = {
 				'recID_article'			: str(articlecount), 
+				'source_API'			: 'newsAPI', 
+				'query_name'			: queryName, 
 				'source_article'		: str(news_article["source"]["name"]).strip(),
 				'title_article' 		: str(news_article["title"]).strip(),
 				'description_article' 	: str(news_article["description"]).strip(),
@@ -99,16 +98,19 @@ def updateNewsLoop():
 	allRecords = airtable_news.get_all() #Get all records 
 	for i in allRecords:
 		if "Prod_Ready" in i["fields"]: #Only working on prod ready ie checkboxed
-			payload_native = i["fields"]["payload"]
-			payload_json = json.loads(payload_native)
-			rec_ofAsked = i["id"]
-			
-			row_output = newscaller(payload_json) #NewsAPI output for this call
-			
-			table_output.append(row_output) #Adding to all data
-			data_toUpload = row_output #In case some operation needed
-			uploadData(data_toUpload, rec_ofAsked) #Upload back to Airtable 
-			print('Row complete..')
+			if "Service" in i["fields"]:
+				if i["fields"]["Service"].lower()  == 'newsapi': #Only pulling if NewsAPI 
+					payload_native = i["fields"]["payload"]
+					payload_json = json.loads(payload_native)
+					rec_ofAsked = i["id"]
+					query_name = i["fields"]["Name"] #Just to differentiate what is being called
+					
+					row_output = newscaller(payload_json, query_name) #NewsAPI output for this call
+
+					table_output.append(row_output) #Adding to all data
+					data_toUpload = row_output #In case some operation needed
+					uploadData(data_toUpload, rec_ofAsked) #Upload back to Airtable 
+					print('Row complete..')
 	
 	dumpData(table_output) #Adding final output to service dump
 	print('Table complete.')

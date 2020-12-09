@@ -17,5 +17,4 @@ install:
   # - master
 
 # command to run tests
-script: python3 amNews_NewsAPI.py
-script: python3 amAirtable_news.py
+script: python3 amNews_APICaller.py

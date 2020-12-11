@@ -12,6 +12,7 @@
 import os
 import json
 import uuid
+# import boto3 #to upload larger files to S3
 from airtable import Airtable
 from datetime import date, datetime, timedelta
 from amNews_NewsAPI import newscaller
@@ -24,6 +25,11 @@ table_name_dump = os.environ.get("PRIVATE_TABLE_NAME_SERVICEDUMP") #Output dump
 api_key_airtable = os.environ.get("PRIVATE_API_KEY_AIRTABLE")
 airtable_news = Airtable(base_key, table_name_news, api_key_airtable)
 airtable_dump = Airtable(base_key, table_name_dump, api_key_airtable)
+
+# # Amazon S3 settings 
+# aws_access_key_id = YOUR_KEY
+# aws_secret_access_key = YOUR_SECRET
+# aws_region='us-east-1'
 
 #Uploads single json, or list to data_output of record ID as given
 def uploadData(inputDictList, recToUpdate):
@@ -46,6 +52,20 @@ def dumpData(inputDictList):
 		data_output = "🚫Output was longer than 100k chars, longer than airtable free allows"
 	fields = {'UUID':UUID, 'time_pulled':time_pulled, 'data_output': data_output, 'amService':amService }
 	airtable_dump.insert(fields)
+
+# # Dumping to service Dump after all is run
+# def uploadToAmazonS3(inputDictList):
+# 	UUID = 'NewsData-'+str(uuid.uuid1())
+# 	time_pulled = str(datetime.now())
+# 	amService = 'amData_News'
+	
+
+# 	if len(str(inputDictList)) <= 100000: #Since airtable free limit. Need to upload to S3 instead
+# 		data_output = str(inputDictList)
+# 	else:
+# 		data_output = "🚫Output was longer than 100k chars, longer than airtable free allows"
+# 	fields = {'UUID':UUID, 'time_pulled':time_pulled, 'data_output': data_output, 'amService':amService }
+# 	airtable_dump.insert(fields)
 
 # Running through rows of news, calling newsAPI, uploading data back
 def updateNewsLoop():

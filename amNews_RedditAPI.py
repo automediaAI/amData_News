@@ -12,10 +12,13 @@ import os
 import praw
 from amService_Mercury import mercury_caller 
 
+reddit_client_id = os.environ.get("PRIVATE_REDDIT_CLIENTID")
+reddit_client_secret = os.environ.get("PRIVATE_REDDIT_SECRET")
+
 # Reddit object standard for all 
 reddit = praw.Reddit(
-     client_id=os.environ.get("PRIVATE_REDDIT_CLIENTID"),
-     client_secret=os.environ.get("PRIVATE_REDDIT_SECRET"),
+     client_id=reddit_client_id,
+     client_secret=reddit_client_secret,
      user_agent="am_agent_reddit_v1"
 )
 

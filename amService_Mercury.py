@@ -27,8 +27,10 @@ from os.path import dirname, abspath
 # print (dir_source) #To check the path of the DIR
 
 ###### Manually hosted Mercury Server on AWS Lambda ######
-endpoint_of_mercury_post = os.environ.get("MERCURY_POST_ENDPOINT")
-endpoint_of_mercury_get = os.environ.get("MERCURY_GET_ENDPOINT")
+mercury_post = os.environ.get("MERCURY_POST_ENDPOINT")
+mercury_get = os.environ.get("MERCURY_GET_ENDPOINT")
+endpoint_of_mercury_post = mercury_post
+endpoint_of_mercury_get = mercury_get
 
 ###### Caller Mercury and get data ######
 def mercury_caller(article_in):

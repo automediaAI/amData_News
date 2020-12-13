@@ -12,10 +12,9 @@ import os
 import praw
 from amService_Mercury import mercury_caller 
 
+# Reddit credentials
 reddit_client_id = os.environ.get("PRIVATE_REDDIT_CLIENTID")
 reddit_client_secret = os.environ.get("PRIVATE_REDDIT_SECRET")
-
-# Reddit object standard for all 
 reddit = praw.Reddit(
      client_id=reddit_client_id,
      client_secret=reddit_client_secret,
@@ -74,7 +73,10 @@ def reddit_caller(reddit_query, queryName):
 		url_to_check = article['article_url']
 		print('URL to mercury: ', url_to_check)
 		mercury_data = mercury_caller(url_to_check)
-		article.update(mercury_data) #format is already goood
+		if mercury_data == 'error':
+			print ('🚫Article skipped since Mercury crapped out')
+		else:
+			article.update(mercury_data) #format is already goood
 	return reddit_LinkList
 
 # # Testing

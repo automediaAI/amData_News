@@ -65,8 +65,10 @@ def mercury_caller(article_in):
 		return mercurized_article_data #returns a dict
 
 	else:
-		print('Mercury API has crapped out, didnt return anything')
-		abort(400)
+		print('🚫Mercury API has crapped out, didnt return anything')
+		mercurized_article_data = "error"
+		return mercurized_article_data
+
 
 # ##### Test ######
 # article_to_get = "https://www.cnn.com/2020/02/15/us/sex-and-the-city-actress-lynn-cohen-dies-trnd/index.html"

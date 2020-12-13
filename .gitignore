@@ -126,3 +126,6 @@ dmypy.json
 
 # Rough files
 rough.py
+
+# Output files, local storage
+NewsData*.txt

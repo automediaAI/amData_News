@@ -13,6 +13,7 @@ import os
 import json
 import uuid
 import boto3 #to upload larger files to S3
+from botocore.exceptions import ClientError
 from airtable import Airtable
 from datetime import date, datetime, timedelta
 from amNews_NewsAPI import newscaller
@@ -64,10 +65,10 @@ def dumpToS3(file_name, bucket='amnewsbucket', object_name=None):
     object_name = file_name
     try:
         response = s3.upload_file(file_name, bucket, object_name)
+        return url_s3
     except ClientError as e:
-        logging.error(e)
-        return False
-    return url_s3
+        return ('🚫Error uploading to S3: '+str(e))
+    
 
 # Running through rows of news, calling newsAPI, uploading data back
 def updateNewsLoop():

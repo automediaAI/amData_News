@@ -26,7 +26,6 @@ def all_submissions(posts_object, queryName):
 	submissions_list = []
 	recIDcount = 0
 	for submission in posts_object:
-		recIDcount += 1
 		submission_dict = {
 			'recID':recIDcount,
 			'query_name': queryName, #Name of record in amPayload table
@@ -41,6 +40,7 @@ def all_submissions(posts_object, queryName):
 			'reddit_path':'https://www.reddit.com'+str(submission.permalink) #URL to post
 		}
 		submissions_list.append(submission_dict)
+		recIDcount += 1
 	return submissions_list 
 
 # Function that returns posts object

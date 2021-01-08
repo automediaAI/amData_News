@@ -36,7 +36,7 @@ def all_submissions(posts_object, queryName):
 			'reddit_id':submission.id,
 			'reddit_comments_total':submission.num_comments,
 			'reddit_created':submission.created,
-			'article_url':submission.url, 
+			'submission_url':submission.url, 
 			'reddit_path':'https://www.reddit.com'+str(submission.permalink) #URL to post
 		}
 		submissions_list.append(submission_dict)
@@ -45,18 +45,19 @@ def all_submissions(posts_object, queryName):
 
 # Function that returns posts object
 def all_posts(subreddit_name, sort_order, items_limit, queryName):
+	get_extra = 100 #this will always get more posts than asked for in case data not good, then next functions return correct qty
 	subreddit = reddit.subreddit(subreddit_name)
 	sort_order = sort_order.lower()
 	if sort_order == "top":
-		post_ordered = subreddit.top(limit=items_limit)
+		post_ordered = subreddit.top(limit=items_limit+get_extra)
 	elif sort_order == "new":
-		post_ordered = subreddit.new(limit=items_limit)
+		post_ordered = subreddit.new(limit=items_limit+get_extra)
 	elif sort_order == "hot":
-		post_ordered = subreddit.hot(limit=items_limit)
+		post_ordered = subreddit.hot(limit=items_limit+get_extra)
 	elif sort_order == "rising":
-		post_ordered = subreddit.rising(limit=items_limit)
+		post_ordered = subreddit.rising(limit=items_limit+get_extra)
 	else:
-		post_ordered = subreddit.hot(limit=items_limit)
+		post_ordered = subreddit.hot(limit=items_limit+get_extra)
 	all_posts = all_submissions(post_ordered, queryName)
 	return all_posts
 
@@ -67,25 +68,46 @@ def get_posts(reddit_query, queryName):
 	return posts_returned
 
 # Task function to call Mercury and 
-def reddit_caller(reddit_query, queryName):
+def redditCallerNews(reddit_query, queryName):
 	reddit_LinkList = get_posts(reddit_query, queryName)
+	count_asked = reddit_query['query']['items_limit']
 	for article in reddit_LinkList:
-		url_to_check = article['article_url']
+		url_to_check = article['submission_url']
 		print('URL to mercury: ', url_to_check)
 		mercury_data = mercury_caller(url_to_check)
 		if mercury_data == 'error':
 			print ('🚫Article skipped since Mercury crapped out')
 		else:
 			article.update(mercury_data) #format is already goood
-	return reddit_LinkList
+	if len(reddit_LinkList) <= count_asked: #if less items than asked 
+		return reddit_LinkList
+	else:
+		return reddit_LinkList[:count_asked] #if more items than asked 
 
-# # Testing
-# reddit_query = {'query':{
+def redditCallerImage(reddit_query, queryName):
+	count_asked = reddit_query['query']['items_limit']
+	reddit_posts = get_posts(reddit_query, queryName) #org list of all posts 
+	reddit_ImageList = [] #will have ones with image 
+	for post in reddit_posts:
+		url_to_check = post['submission_url']
+		if '.jpg' in url_to_check or '.jpeg' in url_to_check or '.jpeg' in url_to_check or '.png' in url_to_check or '.gif' in url_to_check or '.gifv' in url_to_check:
+			reddit_ImageList.append(post)
+		else:
+			pass
+	if len(reddit_ImageList) == 0:
+		return "🚫Query requested is invalid"
+	elif len(reddit_ImageList) <= count_asked: #if less items than asked 
+		return reddit_ImageList
+	else:
+		return reddit_ImageList[:count_asked] #if more items than asked 
+
+# Testing
+# reddit_query1 = {'query':{
 # 	# Testing 
 # 	'subreddit_name':"worldnews", #should come from API 
 # 	'sort_order':"new",
-# 	'items_limit':1
+# 	'items_limit':5
 # }}
-# queryName = "World News"
+# queryName1 = "World News"
 
-# print(reddit_caller(reddit_query, queryName))
+# print(redditCallerImage(reddit_query1, queryName1))

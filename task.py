@@ -17,7 +17,7 @@ from botocore.exceptions import ClientError
 from airtable import Airtable
 from datetime import date, datetime, timedelta
 from amNews_NewsAPI import newscaller
-from amNews_RedditAPI import reddit_caller
+from amNews_RedditAPI import redditCallerNews, redditCallerImage
 
 # Airtable settings 
 base_key = os.environ.get("PRIVATE_BASE_KEY")
@@ -86,7 +86,9 @@ def updateNewsLoop():
 				if i["fields"]["Service"].lower()  == 'newsapi': #Only pulling if NewsAPI 	
 					row_output = newscaller(payload_json, query_name) #NewsAPI output for this call
 				elif i["fields"]["Service"].lower()  == 'reddit': #Only pulling if Reddit	
-					row_output = reddit_caller(payload_json, query_name) #NewsAPI output for this call
+					row_output = redditCallerNews(payload_json, query_name) #NewsAPI output for this call
+				elif i["fields"]["Service"].lower()  == 'redditimage': #Only pulling if Reddit	
+					row_output = redditCallerImage(payload_json, query_name) #NewsAPI output for this call
 				else:
 					row_output = "🚫Query requested is invalid"
 				# Appending rest

@@ -6,10 +6,6 @@
 """
 
 ToDo
-x Finish as per structure
-x Rename the dict to match news API pull
-x Use POST instead of Get .. it wasnt working 
-x Put in wrapper 
 . BSoup needed? / HTML text string symbol 
 
 """

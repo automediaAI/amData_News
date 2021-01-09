@@ -19,7 +19,7 @@ from datetime import date, datetime, timedelta
 from amNews_NewsAPI import newscaller
 from amNews_RedditAPI import redditCallerNews, redditCallerImage
 
-# Airtable settings 
+## Airtable settings 
 base_key = os.environ.get("PRIVATE_BASE_KEY")
 table_name_news = os.environ.get("PRIVATE_TABLE_NAME_NEWSPAYLOAD") #What to pull
 table_name_dump = os.environ.get("PRIVATE_TABLE_NAME_SERVICEDUMP") #Output dump
@@ -27,7 +27,7 @@ api_key_airtable = os.environ.get("PRIVATE_API_KEY_AIRTABLE")
 airtable_news = Airtable(base_key, table_name_news, api_key_airtable)
 airtable_dump = Airtable(base_key, table_name_dump, api_key_airtable)
 
-# Amazon S3 settings 
+## Amazon S3 settings 
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 aws_region='us-west-1' #Manual while creating the bucket 

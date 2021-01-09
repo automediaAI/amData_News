@@ -12,9 +12,9 @@ import os
 import praw
 from amService_Mercury import mercury_caller 
 
-# Reddit credentials
+## Reddit credentials 
 reddit_client_id = os.environ.get("PRIVATE_REDDIT_CLIENTID")
-reddit_client_secret = os.environ.get("PRIVATE_REDDIT_SECRET")
+reddit_client_secret = os.environ.get("PRIVATE_REDDIT_SECRET") #using public for now 
 reddit = praw.Reddit(
      client_id=reddit_client_id,
      client_secret=reddit_client_secret,

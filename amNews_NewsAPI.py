@@ -7,7 +7,6 @@
 ## Ticket: https://www.notion.so/automedia/Create-NewsAPI-Headlines-service-91c8a353fe8d4ce1b9f39844b01605c0 
 #############
 
-
 ## Declarations 
 import os
 from newsapi import NewsApiClient # pip install newsapi-python (not newsapi - thats an unused one)

@@ -11,6 +11,7 @@
 import os
 import praw
 from amService_Mercury import mercury_caller 
+from amLibrary_DataAddFunctions import url_to_sitename
 
 ## Reddit credentials 
 reddit_client_id = os.environ.get("PRIVATE_REDDIT_CLIENTID")
@@ -45,7 +46,7 @@ def all_submissions(posts_object, queryName):
 
 # Function that returns posts object
 def all_posts(subreddit_name, sort_order, items_limit, queryName):
-	get_extra = 100 #this will always get more posts than asked for in case data not good, then next functions return correct qty
+	get_extra = 10 #this will always get more posts than asked for in case data not good, then next functions return correct qty
 	subreddit = reddit.subreddit(subreddit_name)
 	sort_order = sort_order.lower()
 	if sort_order == "top":
@@ -74,11 +75,16 @@ def redditCallerNews(reddit_query, queryName):
 	for article in reddit_LinkList:
 		url_to_check = article['submission_url']
 		print('URL to mercury: ', url_to_check)
-		mercury_data = mercury_caller(url_to_check)
+		mercury_data = mercury_caller(url_to_check) #Getting Data from Mercury
 		if mercury_data == 'error':
 			print ('🚫Article skipped since Mercury crapped out')
 		else:
 			article.update(mercury_data) #format is already goood
+		source_news = url_to_sitename(url_to_check) #Getting Sitename from OpenGraph
+		if source_news: #If value is returned from Open Graph
+			article['source_article'] = source_news
+		else: #If nothing is returned from OpenGraph
+			article['source_article'] = ""
 	if len(reddit_LinkList) <= count_asked: #if less items than asked 
 		return reddit_LinkList
 	else:
@@ -110,4 +116,4 @@ def redditCallerImage(reddit_query, queryName):
 # }}
 # queryName1 = "World News"
 
-# print(redditCallerImage(reddit_query1, queryName1))
+# print(redditCallerNews(reddit_query1, queryName1))

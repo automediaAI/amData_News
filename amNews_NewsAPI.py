@@ -42,7 +42,7 @@ def newscaller(input_config, queryName):
 	articlecount = 0
 	for news_article in articles_source:
 		output_article_single = {
-				'recID_article'			: str(articlecount), 
+				'recID'					: str(articlecount), 
 				'source_API'			: 'newsAPI', 
 				'query_name'			: queryName,   #Name of record in amPayload table
 				'source_article'		: str(news_article["source"]["name"]).strip(),

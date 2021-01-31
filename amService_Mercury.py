@@ -68,4 +68,5 @@ def mercury_caller(article_in):
 
 # ##### Test ######
 # article_to_get = "https://www.cnn.com/2020/02/15/us/sex-and-the-city-actress-lynn-cohen-dies-trnd/index.html"
-# mercury_caller(article_to_get)
+# article_to_get = "https://www.aa.com.tr/en/middle-east/israel-worried-by-us-plans-to-lift-icc-sanctions/2124920"
+# print(mercury_caller(article_to_get))

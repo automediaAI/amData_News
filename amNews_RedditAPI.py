@@ -50,7 +50,7 @@ def all_posts(subreddit_name, sort_order, items_limit, queryName):
 	subreddit = reddit.subreddit(subreddit_name)
 	sort_order = sort_order.lower()
 	if sort_order == "top":
-		post_ordered = subreddit.top(limit=items_limit+get_extra)
+		post_ordered = subreddit.top(time_filter="day", limit=items_limit+get_extra) #hard coding for Top to get todays data, else defaults to all
 	elif sort_order == "new":
 		post_ordered = subreddit.new(limit=items_limit+get_extra)
 	elif sort_order == "hot":

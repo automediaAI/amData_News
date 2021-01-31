@@ -104,7 +104,7 @@ def updateNewsLoop():
 	f.close()
 	url_s3_file = dumpToS3(filename) #uploading to S3 and getting file back
 	dumpData(url_s3_file) #Adding final output to service dump
-	
+	os.remove(filename) #deleting file after upload
 	print('Table complete.')
 
 

@@ -39,10 +39,10 @@ def newscaller(input_config, queryName):
 
 	## Organizing data
 	output_article_all = []
-	articlecount = 0
+	# articlecount = 0
 	for news_article in articles_source:
 		output_article_single = {
-				'recID'					: str(articlecount), 
+				# 'recID'					: str(articlecount), 
 				'source_API'			: 'newsAPI', 
 				'query_name'			: queryName,   #Name of record in amPayload table
 				'source_article'		: str(news_article["source"]["name"]).strip(),
@@ -54,7 +54,7 @@ def newscaller(input_config, queryName):
 				'content_article' 		: news_article["content"],
 				}
 		output_article_all.append(output_article_single)
-		articlecount += 1
+		# articlecount += 1
 
 	# Final output from newsAPI run
 	return output_article_all

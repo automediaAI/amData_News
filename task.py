@@ -18,6 +18,7 @@ from airtable import Airtable
 from datetime import date, datetime, timedelta
 from amNews_NewsAPI import newscaller
 from amNews_RedditAPI import redditCallerNews, redditCallerImage
+from amLibrary_Filters import newsClean
 
 ## Airtable settings 
 base_key = os.environ.get("PRIVATE_BASE_KEY")
@@ -84,16 +85,21 @@ def updateNewsLoop():
 				query_name = i["fields"]["Name"] #Just to differentiate what is being called
 				# Calling News service per ask
 				if i["fields"]["Service"].lower()  == 'newsapi': #Only pulling if NewsAPI 	
-					row_output = newscaller(payload_json, query_name) #NewsAPI output for this call
+					row_output_unclean = newscaller(payload_json, query_name) #NewsAPI output for this call
+					row_output = newsClean(row_output_unclean)
 				elif i["fields"]["Service"].lower()  == 'reddit': #Only pulling if Reddit	
-					row_output = redditCallerNews(payload_json, query_name) #NewsAPI output for this call
+					row_output_unclean = redditCallerNews(payload_json, query_name) #NewsAPI output for this call
+					row_output = newsClean(row_output_unclean)
 				elif i["fields"]["Service"].lower()  == 'redditimage': #Only pulling if Reddit	
-					row_output = redditCallerImage(payload_json, query_name) #NewsAPI output for this call
+					row_output_unclean = redditCallerImage(payload_json, query_name) #NewsAPI output for this call
+					row_output = row_output_unclean
 				else:
 					row_output = "🚫Query requested is invalid"
 				# Appending rest
 				table_output.append(row_output) #Adding to all data
-				data_toUpload = row_output #In case some operation needed
+				## Running Text Cleaning and Image Cleaning functions 
+				data_toUpload = row_output #Uploading clean data
+				# data_toUpload = row_output #Uploading clean data
 				uploadData(data_toUpload, rec_ofAsked) #Upload back to Airtable 
 				print('Row complete..')
 	

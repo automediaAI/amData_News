@@ -25,10 +25,10 @@ reddit = praw.Reddit(
 # Function to give back submissions in ordered list
 def all_submissions(posts_object, queryName):
 	submissions_list = []
-	recIDcount = 0
+	# recIDcount = 0
 	for submission in posts_object:
 		submission_dict = {
-			'recID':recIDcount,
+			# 'recID':recIDcount,
 			'query_name': queryName, #Name of record in amPayload table
 			'source_API': 'redditAPI', 
 			'reddit_title':submission.title,
@@ -41,12 +41,12 @@ def all_submissions(posts_object, queryName):
 			'reddit_path':'https://www.reddit.com'+str(submission.permalink) #URL to post
 		}
 		submissions_list.append(submission_dict)
-		recIDcount += 1
+		# recIDcount += 1
 	return submissions_list 
 
 # Function that returns posts object
 def all_posts(subreddit_name, sort_order, items_limit, queryName):
-	get_extra = 10 #this will always get more posts than asked for in case data not good, then next functions return correct qty
+	get_extra = 20 #this will always get more posts than asked for in case data not good, then next functions return correct qty
 	subreddit = reddit.subreddit(subreddit_name)
 	sort_order = sort_order.lower()
 	if sort_order == "top":
@@ -70,8 +70,14 @@ def get_posts(reddit_query, queryName):
 
 # Task function to call Mercury and 
 def redditCallerNews(reddit_query, queryName):
+	# Getting redding submissions
 	reddit_LinkList = get_posts(reddit_query, queryName)
-	count_asked = reddit_query['query']['items_limit']
+	# Quick check if item limit is given, since not using in NewsAPI - may evolve to remove later
+	if reddit_query['query']['items_limit']:
+		count_asked = reddit_query['query']['items_limit']
+	else:
+		count_asked = 6 
+	#Getting Mercury data for reddit articles
 	for article in reddit_LinkList:
 		url_to_check = article['submission_url']
 		print('URL to mercury: ', url_to_check)
@@ -91,7 +97,12 @@ def redditCallerNews(reddit_query, queryName):
 		return reddit_LinkList[:count_asked] #if more items than asked 
 
 def redditCallerImage(reddit_query, queryName):
-	count_asked = reddit_query['query']['items_limit']
+	# Quick check if item limit is given, since not using in NewsAPI - may evolve to remove later
+	if reddit_query['query']['items_limit']:
+		count_asked = reddit_query['query']['items_limit']
+	else:
+		count_asked = 6 
+	# Getting reddit data
 	reddit_posts = get_posts(reddit_query, queryName) #org list of all posts 
 	reddit_ImageList = [] #will have ones with image 
 	for post in reddit_posts:

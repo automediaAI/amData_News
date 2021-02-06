@@ -62,10 +62,10 @@ def dumpData(inputURL):
 # # Dumping to service Dump after all is run
 def dumpToS3(file_name, bucket='amnewsbucket', object_name=None):
     # If S3 object_name was not specified, use file_name
-    url_s3 = f"https://{bucket}.s3.{aws_region}.amazonaws.com/{file_name}" #Manually creating structure
+    url_s3 = f"https://{bucket}.s3-us-west-2.amazonaws.com/{file_name}" #Manually creating structure
     object_name = file_name
     try:
-        response = s3.upload_file(file_name, bucket, object_name)
+        response = s3.upload_file(file_name, bucket, object_name, ExtraArgs={'ACL':'public-read'})
         return url_s3
     except ClientError as e:
         return ('🚫Error uploading to S3: '+str(e))
@@ -118,4 +118,5 @@ def updateNewsLoop():
 	print('Table complete.')
 
 print ('Entering loop..')
+
 updateNewsLoop()

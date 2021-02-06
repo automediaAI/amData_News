@@ -117,5 +117,5 @@ def updateNewsLoop():
 	os.remove(filename) #deleting file after upload
 	print('Table complete.')
 
-
+print ('Entering loop..')
 updateNewsLoop()

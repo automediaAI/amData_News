@@ -73,10 +73,13 @@ def dumpToS3(file_name, bucket='amnewsbucket', object_name=None):
 
 # Running through rows of news, calling newsAPI, uploading data back
 def updateNewsLoop():
+	print ('Started loop..') #Extra to keep app going 
 	table_output = [] #Final data of entire pull
 	allRecords = airtable_news.get_all() #Get all records 
+	print ('All records recieved..') #Extra to keep app going 
 	for i in allRecords:
 		if "Prod_Ready" in i["fields"]: #Only working on prod ready ie checkboxed
+			print ('Started row..') #Extra to keep app going 
 			if "Service" in i["fields"]:
 				# Basic payload, common to all
 				payload_native = i["fields"]["payload"]
@@ -96,6 +99,7 @@ def updateNewsLoop():
 				else:
 					row_output = "🚫Query requested is invalid"
 				# Appending rest
+				print ('Row data done..') #Extra to keep app going 
 				table_output.append(row_output) #Adding to all data
 				## Running Text Cleaning and Image Cleaning functions 
 				data_toUpload = row_output #Uploading clean data

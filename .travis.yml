@@ -16,5 +16,8 @@ install:
 #   only:
   # - master
 
+# command to debug
+script: python3 debug.py
+
 # command to run tests
 script: python3 task.py

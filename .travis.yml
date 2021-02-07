@@ -18,9 +18,9 @@ install:
 
 jobs:
   include:
-    - stage: stuff
+    # - stage: stuff
       # command to test stuff
-      script: python3 nitinCode.py
+      # script: python3 nitinCode.py
     - stage: Actual task
       # command to run tests
-      script: travis_wait python3 task.py
+      script: travis_wait 40 python3 task.py

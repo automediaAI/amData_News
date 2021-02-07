@@ -23,4 +23,4 @@ jobs:
       script: python3 nitinCode.py
     - stage: Actual task
       # command to run tests
-      script: python3 task.py
+      script: travis_wait python3 task.py

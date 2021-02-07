@@ -16,8 +16,11 @@ install:
 #   only:
   # - master
 
-# command to debug
-script: python3 debug.py
-
-# command to run tests
-script: python3 task.py
+jobs:
+  include:
+    - stage: stuff
+      # command to test stuff
+      script: python3 nitinCode.py
+    - stage: Actual task
+      # command to run tests
+      script: python3 task.py

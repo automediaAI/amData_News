@@ -14,11 +14,12 @@ from bs4 import BeautifulSoup
 ######### Get Site Name from Opengraph Data ##########
 def url_to_sitename(url_in): #Only works for a single use case of opengraph
 	try: #adding overall in case any error
-		response = requests.get(url_in)
+		response = requests.get(url_in, timeout=15)
 		soup = BeautifulSoup(response.text, 'html.parser')
 		try:
 			sitename = soup.find("meta", property ="og:site_name").attrs["content"]
 		except: #from https://stackoverflow.com/a/41919945/9231911
+			print("ran into exception with bs4")
 			parsed_uri = urlparse(url_in)
 			domain = '{uri.netloc}'.format(uri=parsed_uri)
 			result = domain.replace('www.', '')  # as per your case
@@ -36,3 +37,4 @@ def url_to_sitename(url_in): #Only works for a single use case of opengraph
 # print(url_to_sitename('https://www.globaltimes.cn/page/202101/1213707.shtml')) #No sitename in PG
 # print(url_to_sitename('https://www.w3schools.com/python/python_try_except.asp')) #No sitename in PG
 # print(url_to_sitename('https://www.aa.com.tr/en/middle-east/israel-worried-by-us-plans-to-lift-icc-sanctions/2124920')) #No sitename in PG
+# print(url_to_sitename('https://www.seattletimes.com/nation-world/mutated-virus-may-reinfect-people-already-stricken-once-with-covid-19-sparking-debate-and-concerns/')) #Requests.get not working

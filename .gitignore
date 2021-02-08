@@ -101,6 +101,7 @@ celerybeat-schedule
 .env
 .venv
 env/
+news_venv/
 venv/
 ENV/
 env.bak/

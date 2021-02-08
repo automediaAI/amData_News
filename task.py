@@ -86,6 +86,8 @@ def updateNewsLoop():
 				payload_json = json.loads(payload_native)
 				rec_ofAsked = i["id"]
 				query_name = i["fields"]["Name"] #Just to differentiate what is being called
+				# print(payload_json)
+				# print(query_name)
 				# Calling News service per ask
 				if i["fields"]["Service"].lower()  == 'newsapi': #Only pulling if NewsAPI 	
 					row_output_unclean = newscaller(payload_json, query_name) #NewsAPI output for this call

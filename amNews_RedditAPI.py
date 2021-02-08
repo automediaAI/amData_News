@@ -10,12 +10,12 @@
 
 import os
 import praw
-from amService_Mercury import mercury_caller 
+from amService_Mercury import mercury_caller
 from amLibrary_DataAddFunctions import url_to_sitename
 
-## Reddit credentials 
+## Reddit credentials
 reddit_client_id = os.environ.get("PRIVATE_REDDIT_CLIENTID")
-reddit_client_secret = os.environ.get("PRIVATE_REDDIT_SECRET") #using public for now 
+reddit_client_secret = os.environ.get("PRIVATE_REDDIT_SECRET") #using public for now
 reddit = praw.Reddit(
      client_id=reddit_client_id,
      client_secret=reddit_client_secret,
@@ -30,14 +30,14 @@ def all_submissions(posts_object, queryName):
 		submission_dict = {
 			# 'recID':recIDcount,
 			'query_name': queryName, #Name of record in amPayload table
-			'source_API': 'redditAPI', 
+			'source_API': 'redditAPI',
 			'reddit_title':submission.title,
 			'reddit_body':submission.selftext,
 			'reddit_score':submission.score,
 			'reddit_id':submission.id,
 			'reddit_comments_total':submission.num_comments,
 			'reddit_created':submission.created,
-			'submission_url':submission.url, 
+			'submission_url':submission.url,
 			'reddit_path':'https://www.reddit.com'+str(submission.permalink) #URL to post
 		}
 		submissions_list.append(submission_dict)
@@ -68,7 +68,7 @@ def get_posts(reddit_query, queryName):
 	posts_returned = all_posts(payload['subreddit_name'], payload['sort_order'], payload['items_limit'], queryName)
 	return posts_returned
 
-# Task function to call Mercury and 
+# Task function to call Mercury and
 def redditCallerNews(reddit_query, queryName):
 	# Getting redding submissions
 	reddit_LinkList = get_posts(reddit_query, queryName)
@@ -76,7 +76,7 @@ def redditCallerNews(reddit_query, queryName):
 	if reddit_query['query']['items_limit']:
 		count_asked = reddit_query['query']['items_limit']
 	else:
-		count_asked = 6 
+		count_asked = 6
 	#Getting Mercury data for reddit articles
 	for article in reddit_LinkList:
 		url_to_check = article['submission_url']
@@ -91,20 +91,20 @@ def redditCallerNews(reddit_query, queryName):
 			article['source_article'] = source_news
 		else: #If nothing is returned from OpenGraph
 			article['source_article'] = ""
-	if len(reddit_LinkList) <= count_asked: #if less items than asked 
+	if len(reddit_LinkList) <= count_asked: #if less items than asked
 		return reddit_LinkList
 	else:
-		return reddit_LinkList[:count_asked] #if more items than asked 
+		return reddit_LinkList[:count_asked] #if more items than asked
 
 def redditCallerImage(reddit_query, queryName):
 	# Quick check if item limit is given, since not using in NewsAPI - may evolve to remove later
 	if reddit_query['query']['items_limit']:
 		count_asked = reddit_query['query']['items_limit']
 	else:
-		count_asked = 6 
+		count_asked = 6
 	# Getting reddit data
-	reddit_posts = get_posts(reddit_query, queryName) #org list of all posts 
-	reddit_ImageList = [] #will have ones with image 
+	reddit_posts = get_posts(reddit_query, queryName) #org list of all posts
+	reddit_ImageList = [] #will have ones with image
 	for post in reddit_posts:
 		url_to_check = post['submission_url']
 		if '.jpg' in url_to_check or '.jpeg' in url_to_check or '.jpeg' in url_to_check or '.png' in url_to_check or '.gif' in url_to_check or '.gifv' in url_to_check:
@@ -113,15 +113,15 @@ def redditCallerImage(reddit_query, queryName):
 			pass
 	if len(reddit_ImageList) == 0:
 		return "🚫Query requested is invalid"
-	elif len(reddit_ImageList) <= count_asked: #if less items than asked 
+	elif len(reddit_ImageList) <= count_asked: #if less items than asked
 		return reddit_ImageList
 	else:
-		return reddit_ImageList[:count_asked] #if more items than asked 
+		return reddit_ImageList[:count_asked] #if more items than asked
 
 # Testing
 # reddit_query1 = {'query':{
-# 	# Testing 
-# 	'subreddit_name':"worldnews", #should come from API 
+# 	# Testing
+# 	'subreddit_name':"worldnews", #should come from API
 # 	'sort_order':"new",
 # 	'items_limit':5
 # }}

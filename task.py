@@ -17,6 +17,7 @@ from botocore.exceptions import ClientError
 from airtable import Airtable
 from datetime import date, datetime, timedelta
 from amNews_NewsAPI import newscaller
+from amNews_BingAPI import bingnewscaller
 from amNews_RedditAPI import redditCallerNews, redditCallerImage
 from amLibrary_Filters import newsClean
 
@@ -91,6 +92,10 @@ def updateNewsLoop():
 				# Calling News service per ask
 				if i["fields"]["Service"].lower()  == 'newsapi': #Only pulling if NewsAPI 	
 					row_output_unclean = newscaller(payload_json, query_name) #NewsAPI output for this call
+					row_output = newsClean(row_output_unclean)
+				elif i["fields"]["Service"].lower()  == 'bing': #Only pulling if NewsAPI 	
+					row_output_unclean = bingnewscaller(payload_json, query_name) #NewsAPI output for this call
+					# row_output = row_output_unclean
 					row_output = newsClean(row_output_unclean)
 				elif i["fields"]["Service"].lower()  == 'reddit': #Only pulling if Reddit	
 					row_output_unclean = redditCallerNews(payload_json, query_name) #NewsAPI output for this call

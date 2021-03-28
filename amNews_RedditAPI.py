@@ -30,7 +30,7 @@ def all_submissions(posts_object, queryName):
 		submission_dict = {
 			# 'recID':recIDcount,
 			'query_name': queryName, #Name of record in amPayload table
-			'source_API': 'redditAPI',
+			'source_API': 'reddit',
 			'reddit_title':submission.title,
 			'reddit_body':submission.selftext,
 			'reddit_score':submission.score,

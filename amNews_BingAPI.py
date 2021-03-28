@@ -54,7 +54,7 @@ def bingnewscaller(input_config, queryName):
 	output_article_all = []
 	for news_article in articles_source:
 		output_article_single = {
-				'source_API'			: 'bingAPI', 
+				'source_API'			: 'bing', 
 				'query_name'			: queryName,   #Name of record in amPayload table	
 				'source_article'		: str(news_article["provider"][0]["name"]).strip(), #done
 				'source_icon'			: pidRemover(news_article.get('provider')[0].get('image', {}).get("thumbnail", {}).get("contentUrl","")), #done

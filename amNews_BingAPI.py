@@ -59,7 +59,7 @@ def bingnewscaller(input_config, queryName):
 				'source_article'		: str(news_article["provider"][0]["name"]).strip(), #done
 				'source_icon'			: pidRemover(news_article.get('provider')[0].get('image', {}).get("thumbnail", {}).get("contentUrl","")), #done
 				'title_article' 		: str(news_article["name"]).strip(), #done
-				'description_article' 	: str(news_article["description"]).strip(), #done
+				'content_article' 		: str(news_article["description"]).strip(), #done
 				'url_article' 			: str(news_article["url"]).strip(), #done
 				'urtToImage_article' 	: pidRemover(news_article.get('image', {}).get("thumbnail", {}).get("contentUrl","")), #done
 				'publishedAt_article' 	: news_article["datePublished"], #done

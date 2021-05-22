@@ -34,7 +34,7 @@ def checkYoutube(string, word="youtube"):
 	return checkWord(string, word)
 
 ## Checks if length of word less than something
-def lenCheck(string, count=10):
+def lenCheck(string, count=30):
 	if len(string) >= count:
 		return True
 

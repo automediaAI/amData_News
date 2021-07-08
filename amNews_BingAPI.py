@@ -12,6 +12,7 @@ import json
 import os
 import requests
 
+
 from amService_Mercury import mercury_caller
 
 #Bing Credentials 

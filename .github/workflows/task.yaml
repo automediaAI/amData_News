@@ -28,5 +28,18 @@ jobs:
     #   run: |
     #     python transformers_t5base_playground.py
     - name: Run the overall task
+      env:
+          BING_SEARCH_V7_SUBSCRIPTION_KEY: ${{ secrets.BING_SEARCH_V7_SUBSCRIPTION_KEY }}
+          PRIVATE_API_KEY_NEWSAPI: ${{ secrets.PRIVATE_API_KEY_NEWSAPI }}
+          PRIVATE_REDDIT_CLIENTID: ${{ secrets.PRIVATE_REDDIT_CLIENTID }}
+          PRIVATE_REDDIT_SECRET: ${{ secrets.PRIVATE_REDDIT_SECRET }}
+          MERCURY_POST_ENDPOINT: ${{ secrets.MERCURY_POST_ENDPOINT }}
+          MERCURY_GET_ENDPOINT: ${{ secrets.MERCURY_GET_ENDPOINT }}
+          PRIVATE_BASE_KEY: ${{ secrets.PRIVATE_BASE_KEY }}
+          PRIVATE_TABLE_NAME_NEWSPAYLOAD: ${{ secrets.PRIVATE_TABLE_NAME_NEWSPAYLOAD }}
+          PRIVATE_TABLE_NAME_SERVICEDUMP: ${{ secrets.PRIVATE_TABLE_NAME_SERVICEDUMP }}
+          PRIVATE_API_KEY_AIRTABLE: ${{ secrets.PRIVATE_API_KEY_AIRTABLE }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
         python task.py

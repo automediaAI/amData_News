@@ -52,18 +52,18 @@ def bingnewscaller(input_config, queryName):
     #Recording the data from the original Dictionary
     articles_source = source["value"] #MAIN CONTENT SOURCE Variable
 
-    # run mercury processing
-    url_to_check = str(news_article["url"]).strip()
-    print('URL to mercury: ', url_to_check)
-    mercury_data = mercury_caller(url_to_check) #Getting Data from Mercury
-    if mercury_data == 'error':
-        print ('🚫Article skipped since Mercury crapped out')
-    else:
-        news_article_content = mercury_data #format is already goood
-
     ## Organizing data
     output_article_all = []
     for news_article in articles_source:
+        # run mercury processing
+        url_to_check = str(news_article["url"]).strip()
+        print('URL to mercury: ', url_to_check)
+        mercury_data = mercury_caller(url_to_check) #Getting Data from Mercury
+        if mercury_data == 'error':
+            print ('🚫Article skipped since Mercury crapped out')
+        else:
+            news_article_content = mercury_data #format is already goood
+
         output_article_single = {
                 'source_API'            : 'bing', 
                 'query_name'            : queryName,   #Name of record in amPayload table   

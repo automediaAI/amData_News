@@ -3,6 +3,11 @@ name: task runner
 on:
   push:
   workflow_dispatch:
+  schedule:
+    - cron:  '00 03 * * *'
+    - cron:  '00 06 * * *'
+    - cron:  '00 11 * * *'
+    - cron:  '00 16 * * *'
 
 jobs:
   build:

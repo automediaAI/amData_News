@@ -13,6 +13,7 @@ import os
 import requests
 
 from amService_Mercury import mercury_caller
+from amService_Summarizer import summarization_caller
 
 #Bing Credentials 
 subscriptionKey = os.environ.get("BING_SEARCH_V7_SUBSCRIPTION_KEY")
@@ -64,17 +65,20 @@ def bingnewscaller(input_config, queryName):
         else:
             news_article_content = mercury_data #format is already goood
 
+            summarizer_content = summarization_caller(news_article_content)
+
         output_article_single = {
-                'source_API'            : 'bing', 
-                'query_name'            : queryName,   #Name of record in amPayload table   
-                'source_article'        : str(news_article["provider"][0]["name"]).strip(), #done
-                'source_icon'           : pidRemover(news_article.get('provider')[0].get('image', {}).get("thumbnail", {}).get("contentUrl","")), #done
-                'title_article'         : str(news_article["name"]).strip(), #done
-                'description_article'   : str(news_article["description"]).strip(), #done
-                'url_article'           : str(news_article["url"]).strip(), #done
-                'urtToImage_article'    : pidRemover(news_article.get('image', {}).get("thumbnail", {}).get("contentUrl","")), #done
-                'publishedAt_article'   : news_article["datePublished"], #done
-                'content_article'       : news_article_content,
+                'source_API'               : 'bing', 
+                'query_name'               : queryName,   #Name of record in amPayload table   
+                'source_article'           : str(news_article["provider"][0]["name"]).strip(), #done
+                'source_icon'              : pidRemover(news_article.get('provider')[0].get('image', {}).get("thumbnail", {}).get("contentUrl","")), #done
+                'title_article'            : str(news_article["name"]).strip(), #done
+                'description_article'      : str(news_article["description"]).strip(), #done
+                'url_article'              : str(news_article["url"]).strip(), #done
+                'urtToImage_article'       : pidRemover(news_article.get('image', {}).get("thumbnail", {}).get("contentUrl","")), #done
+                'publishedAt_article'      : news_article["datePublished"], #done
+                'content_article'          : news_article_content,
+                'summarized_article'       : summarizer_content,
                 }
         output_article_all.append(output_article_single)
 

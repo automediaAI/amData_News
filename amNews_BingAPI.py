@@ -64,8 +64,9 @@ def bingnewscaller(input_config, queryName):
             print ('🚫Article skipped since Mercury crapped out')
         else:
             news_article_content = mercury_data #format is already goood
-
+            print(news_article_content)
             summarizer_content = summarization_caller(news_article_content['content_article'])
+            print(summarizer_content)
 
         output_article_single = {
                 'source_API'               : 'bing', 

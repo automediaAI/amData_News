@@ -65,7 +65,7 @@ def bingnewscaller(input_config, queryName):
         else:
             news_article_content = mercury_data #format is already goood
 
-            summarizer_content = summarization_caller(news_article_content)
+            summarizer_content = summarization_caller(news_article_content['content_article'])
 
         output_article_single = {
                 'source_API'               : 'bing', 

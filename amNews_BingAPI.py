@@ -60,6 +60,7 @@ def bingnewscaller(input_config, queryName):
         url_to_check = str(news_article["url"]).strip()
         print('URL to mercury: ', url_to_check)
         mercury_data = mercury_caller(url_to_check) #Getting Data from Mercury
+        news_article_content = ""
         if mercury_data == 'error':
             print ('🚫Article skipped since Mercury crapped out')
         else:

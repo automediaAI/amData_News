@@ -12,8 +12,8 @@ import json
 import os
 import requests
 
-from amService_Mercury import mercury_caller
-from amService_Summarizer import summarization_caller
+from amService_Mercury import mercury_caller #Mercury service to value add article data
+from amService_Summarizer import summarization_caller #Summarization service to create summary
 
 #Bing Credentials 
 subscriptionKey = os.environ.get("BING_SEARCH_V7_SUBSCRIPTION_KEY")
@@ -51,7 +51,7 @@ def bingnewscaller(input_config, queryName):
 
     ########################     RAW DATA    ############################
     #Recording the data from the original Dictionary
-    articles_source = source["value"] #MAIN CONTENT SOURCE Variable
+    articles_source = source["value"] #Article content from BingAPI
 
     ## Organizing data
     output_article_all = []
@@ -64,11 +64,14 @@ def bingnewscaller(input_config, queryName):
         if mercury_data == 'error':
             print ('🚫Article skipped since Mercury crapped out')
         else:
-            news_article_content = mercury_data #format is already goood
-            print(news_article_content)
-            summarizer_content = summarization_caller(news_article_content['content_article'])
-            print(summarizer_content)
+            news_article_content_mercury = mercury_data['content_article'] #To get only content of article from mercury dict
+            urtToImage_article_mercury = mercury_data['urtToImage_article'] #To get higher s
+            # print(news_article_content)
+            #Calling Summarizer
+            summarized_content = summarization_caller(news_article_content_mercury)
+            # print(summarizer_content)
 
+        #taking most from BingAPI, adding from Mercury API
         output_article_single = {
                 'source_API'               : 'bing', 
                 'query_name'               : queryName,   #Name of record in amPayload table   
@@ -77,10 +80,11 @@ def bingnewscaller(input_config, queryName):
                 'title_article'            : str(news_article["name"]).strip(), #done
                 'description_article'      : str(news_article["description"]).strip(), #done
                 'url_article'              : str(news_article["url"]).strip(), #done
-                'urtToImage_article'       : pidRemover(news_article.get('image', {}).get("thumbnail", {}).get("contentUrl","")), #done
+                # 'urtToImage_article'       : pidRemover(news_article.get('image', {}).get("thumbnail", {}).get("contentUrl","")), #done
+                'urtToImage_article'       : urtToImage_article_mercury, #Using mercury data instead
                 'publishedAt_article'      : news_article["datePublished"], #done
-                'content_article'          : news_article_content,
-                'summarized_article'       : summarizer_content,
+                'content_article'          : news_article_content_mercury,
+                'summarized_article'       : summarized_content,
                 }
         output_article_all.append(output_article_single)
 

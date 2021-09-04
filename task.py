@@ -85,7 +85,7 @@ def updateNewsLoop():
 				# Basic payload, common to all
 				payload_native = i["fields"]["payload"]
 				payload_json = json.loads(payload_native)
-				rec_ofAsked = i["id"]
+				rec_ofAsked = i["id"] #Airtable record with query
 				query_name = i["fields"]["Name"] #Just to differentiate what is being called
 				# print(payload_json)
 				# print(query_name)

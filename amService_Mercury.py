@@ -53,7 +53,7 @@ def mercury_caller(article_in):
 			"description_article" 	: "",
 			"urtToImage_article"	: str(page_data.get("lead_image_url","")),
 			"publishedAt_article" 	: str(page_data.get("date_published","")),
-			"content_article" 		: str(page_data.get("content","")),
+			"content_article" 		: str(page_data.get("content","")).strip(),
 			"article_author"		: str(page_data.get("author",""))
 			}
 

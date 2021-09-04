@@ -10,6 +10,7 @@
 ## Declarations 
 import os
 from newsapi import NewsApiClient # pip install newsapi-python (not newsapi - thats an unused one)
+from amService_Summarizer import summarization_caller #Summarization service to create summary
 
 # NewsAPI Settings
 api_key_newsAPI = os.environ.get("PRIVATE_API_KEY_NEWSAPI")
@@ -41,6 +42,8 @@ def newscaller(input_config, queryName):
 	output_article_all = []
 	# articlecount = 0
 	for news_article in articles_source:
+		article_content = news_article["content"] #Getting content earlier to summarize
+		summarized_content = summarization_caller(article_content) #Pulling summary data based on content
 		output_article_single = {
 				# 'recID'					: str(articlecount), 
 				'source_API'			: 'newsAPI', 
@@ -51,7 +54,8 @@ def newscaller(input_config, queryName):
 				'url_article' 			: str(news_article["url"]).strip(),
 				'urtToImage_article' 	: news_article["urlToImage"],
 				'publishedAt_article' 	: news_article["publishedAt"],
-				'content_article' 		: news_article["content"],
+				'content_article' 		: article_content,
+				'summarized_article'    : summarized_content,
 				}
 		output_article_all.append(output_article_single)
 		# articlecount += 1

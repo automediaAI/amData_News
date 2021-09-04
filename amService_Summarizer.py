@@ -20,4 +20,5 @@ def summarization_caller(article_in):
 	# return {'default_summary': default_summary[0]['summary_text'],
 	#         'long_summary': long_summary[0]['summary_text'],
 	#         'short_summary': short_summary[0]['summary_text']}
-	return default_summary
+	# return default_summary Original, gives a list
+	return default_summary[0]["summary_text"] #Just text

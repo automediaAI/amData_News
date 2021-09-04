@@ -10,7 +10,8 @@
 
 import os
 import praw
-from amService_Mercury import mercury_caller
+from amService_Mercury import mercury_caller #Mercury service to get all article data 
+from amService_Summarizer import summarization_caller #Summarization service to create summary
 from amLibrary_DataAddFunctions import url_to_sitename
 
 ## Reddit credentials
@@ -85,7 +86,10 @@ def redditCallerNews(reddit_query, queryName):
 		if mercury_data == 'error':
 			print ('🚫Article skipped since Mercury crapped out')
 		else:
-			article.update(mercury_data) #format is already goood
+			article.update(mercury_data) #Adding all mercury data to article, it already has reddit data
+			summarized_content = summarization_caller(article['content_article']) #Pulling summary data based on content
+			article["summarized_article"] = summarized_content #Adding summary data
+
 		source_news = url_to_sitename(url_to_check) #Getting Sitename from OpenGraph
 		if source_news: #If value is returned from Open Graph
 			article['source_article'] = source_news

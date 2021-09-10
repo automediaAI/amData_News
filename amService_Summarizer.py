@@ -15,7 +15,7 @@ summarizer = pipeline('summarization', model=model, tokenizer=tokenizer)
 
 ###### Calle Summarization pipeline and get data ######
 def summarization_caller(article_in):
-	print(article_in)
+	# print(article_in)
 	default_summary = summarizer(article_in, truncation=True)
 	# long_summary = summarizer(news_item['text_article'], max_length=330, min_length=100, truncation=False)
 	# short_summary = summarizer(news_item['text_article'], max_length=50, min_length=10, truncation=False)

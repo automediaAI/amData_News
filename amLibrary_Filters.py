@@ -12,6 +12,8 @@ from PIL import Image
 import requests
 from langdetect import detect #https://pypi.org/project/langdetect/
 from profanityfilter import ProfanityFilter ##https://pypi.org/project/profanityfilter/ Manual dict
+from amService_Summarizer import summarization_caller #Summarization service to create summary
+
 
 ### TEXT CHECK FUNCTIONS 
 ## Detects Language of text 
@@ -96,7 +98,18 @@ def newsClean(allDict):
 		if newsCheck(i):
 			cleanList.append(i)
 	return cleanList
-						
+
+# Returns summarized version of the news, takes large dict finds content and summarizes 
+def newsSummarized(allList):
+	for news_article in allList:
+		article_content = news_article["content_article"] #Getting content earlier to summarize
+		summarized_content = summarization_caller(article_content) #Pulling summary data based on content
+		#logic to see if to use summary or not, will refine more later
+		if len(summarized_content) < article_content:
+			news_article["summarized_article"] = summarized_content
+		else:
+			news_article["summarized_article"] = article_content
+	return allList
 
 
 ## Testing - COMBO 

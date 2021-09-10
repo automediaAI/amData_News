@@ -7,9 +7,11 @@ tokenizer = AutoTokenizer.from_pretrained('facebook/bart-large-cnn')
 model = AutoModelForSeq2SeqLM.from_pretrained('facebook/bart-large-cnn')
 
 summarizer = pipeline('summarization', model=model, tokenizer=tokenizer)
-print('*'*80)
-print(summarizer)
-print('*'*80)
+
+# Test 
+# print('*'*80)
+# print(summarizer)
+# print('*'*80)
 
 ###### Calle Summarization pipeline and get data ######
 def summarization_caller(article_in):

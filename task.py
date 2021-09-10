@@ -19,7 +19,7 @@ from datetime import date, datetime, timedelta
 from amNews_NewsAPI import newscaller
 from amNews_BingAPI import bingnewscaller
 from amNews_RedditAPI import redditCallerNews, redditCallerImage
-from amLibrary_Filters import newsClean
+from amLibrary_Filters import newsClean, newsSummarized
 
 ## Airtable settings 
 base_key = os.environ.get("PRIVATE_BASE_KEY")
@@ -53,7 +53,7 @@ def uploadData(inputDictList, recToUpdate):
 	airtable_news.update(recID, fields)
 
 # Dumping to service Dump after all is run
-def dumpData(inputURL):
+def dumpToAirtable(inputURL):
 	time_pulled = str(datetime.now())
 	amService = 'amData_News'
 	data_output = str(inputURL)
@@ -70,7 +70,18 @@ def dumpToS3(file_name, bucket='amnewsbucket', object_name=None):
         return url_s3
     except ClientError as e:
         return ('🚫Error uploading to S3: '+str(e))
-    
+
+def dumpData(table_output, filename_pre):
+	filename = (filename_pre + UUID+'.txt')
+	#Creating a local text file 
+	f = open(filename,"w")
+	f.write( str(table_output) )
+	f.close()
+	url_s3_file = dumpToS3(filename) #uploading to S3 and getting file back
+	dumpToAirtable(url_s3_file) #Adding final output to service dump
+	os.remove(filename) #deleting file after upload
+	print('Dump Upload complete.')
+
 
 # Running through rows of news, calling newsAPI, uploading data back
 def updateNewsLoop():
@@ -113,17 +124,26 @@ def updateNewsLoop():
 				# data_toUpload = row_output #Uploading clean data
 				uploadData(data_toUpload, rec_ofAsked) #Upload back to Airtable 
 				print('Row complete..')
-	
-	filename = (UUID+'.txt')
-	#Creating a local text file 
-	f = open(filename,"w")
-	f.write( str(table_output) )
-	f.close()
-	url_s3_file = dumpToS3(filename) #uploading to S3 and getting file back
-	dumpData(url_s3_file) #Adding final output to service dump
-	os.remove(filename) #deleting file after upload
-	print('Table complete.')
+	dumpData(table_output, "NewsCleanUnsummarized")
 
-print ('Entering loop..')
+def updateNewsSummary():
+	print ('Started loop..') #Extra to keep app going 
+	table_output = [] #Final data of entire pull
+	allRecords = airtable_news.get_all() #Get all records 
+	print ('All records recieved..') #Extra to keep app going 
+	for i in allRecords:
+		if "Prod_Ready" in i["fields"]: #Only working on prod ready ie checkboxed
+			print ('Started row..') #Extra to keep app going 
+			payload_native = i["fields"]["output"] #Getting column on unsummarized data
+			payload_json = json.loads(payload_native)
+			rec_ofAsked = i["id"] #Airtable record with query
+			row_output = newsSummarized(payload_json) #Summarized data
+			print('Row complete..')
+			table_output.append(row_output) #Adding to all data
+	dumpData(table_output, "NewsSummarized")
 
+
+print ('Entering news pull loop..')
 updateNewsLoop()
+print ('Entering news summary loop..')
+updateNewsSummary()

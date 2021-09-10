@@ -13,7 +13,7 @@ import os
 import requests
 
 from amService_Mercury import mercury_caller #Mercury service to value add article data
-from amService_Summarizer import summarization_caller #Summarization service to create summary
+# from amService_Summarizer import summarization_caller #Summarization service to create summary
 
 #Bing Credentials 
 subscriptionKey = os.environ.get("BING_SEARCH_V7_SUBSCRIPTION_KEY")
@@ -68,7 +68,7 @@ def bingnewscaller(input_config, queryName):
             urtToImage_article_mercury = mercury_data['urtToImage_article'] #To get higher s
             # print(news_article_content)
             #Calling Summarizer
-            summarized_content = summarization_caller(news_article_content_mercury)
+            # summarized_content = summarization_caller(news_article_content_mercury)
             # print(summarizer_content)
 
         #taking most from BingAPI, adding from Mercury API
@@ -84,7 +84,7 @@ def bingnewscaller(input_config, queryName):
                 'urtToImage_article'       : urtToImage_article_mercury, #Using mercury data instead
                 'publishedAt_article'      : news_article["datePublished"], #done
                 'content_article'          : news_article_content_mercury,
-                'summarized_article'       : summarized_content,
+                # 'summarized_article'       : summarized_content,
                 }
         output_article_all.append(output_article_single)
 

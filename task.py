@@ -117,8 +117,12 @@ def updateNewsLoop():
 				else:
 					row_output = "🚫Query requested is invalid"
 				# Appending rest
-				print ('Row data done..') #Extra to keep app going 
-				table_output.append(row_output) #Adding to all data
+				print ('Row data done..') #Extra to keep app going 	
+				try:
+					table_output.append(row_output) #Adding to all data
+				except Exception:
+					print ("🚫Error saving article")
+					pass
 				## Running Text Cleaning and Image Cleaning functions 
 				data_toUpload = row_output #Uploading clean data
 				# data_toUpload = row_output #Uploading clean data

@@ -81,7 +81,7 @@ def redditCallerNews(reddit_query, queryName):
 	#Getting Mercury data for reddit articles
 	for article in reddit_LinkList:
 		url_to_check = article['submission_url']
-		print('URL to mercury: ', url_to_check)
+		# print('URL to mercury: ', url_to_check)
 		mercury_data = mercury_caller(url_to_check) #Getting Data from Mercury
 		if mercury_data == 'error':
 			print ('🚫Article skipped since Mercury crapped out')

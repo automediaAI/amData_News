@@ -145,6 +145,8 @@ def updateNewsSummary():
 			payload_native = i["fields"]["output"] #Getting column on unsummarized data
 			print("payload_native is ")
 			print(payload_native)
+			print("payload_native type is ")
+			print(type(payload_native))
 			print("="*80)
 			if isinstance(payload_native,list) or isinstance(payload_native,dict):
 				payload_json = payload_native

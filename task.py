@@ -143,6 +143,9 @@ def updateNewsSummary():
 		if "Prod_Ready" in i["fields"]: #Only working on prod ready ie checkboxed
 			print ('Started row..') #Extra to keep app going 
 			payload_native = i["fields"]["output"] #Getting column on unsummarized data
+			print("payload_native is ")
+			print(payload_native)
+			print("="*80)
 			payload_json = json.loads(payload_native)
 			rec_ofAsked = i["id"] #Airtable record with query
 			row_output = newsSummarized(payload_json) #Summarized data

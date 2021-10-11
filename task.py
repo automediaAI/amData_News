@@ -153,7 +153,8 @@ def updateNewsSummary():
 			# elif isinstance(payload_native,str):
 			# 	payload_json = json.loads(json.dumps(payload_native))
 			else:
-				payload_json = json.loads(payload_native)
+				# payload_json = json.loads(payload_native)
+				payload_json = eval(payload_native)
 			print("payload_json type is")
 			print(type(payload_json))
 			print(payload_json)

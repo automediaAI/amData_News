@@ -150,8 +150,8 @@ def updateNewsSummary():
 			print("="*80)
 			if isinstance(payload_native,list) or isinstance(payload_native,dict):
 				payload_json = payload_native
-			elif isinstance(payload_native,str):
-				payload_json = json.loads(json.dumps(payload_native))
+			# elif isinstance(payload_native,str):
+			# 	payload_json = json.loads(json.dumps(payload_native))
 			else:
 				payload_json = json.loads(payload_native)
 			print("payload_json type is")

@@ -156,6 +156,7 @@ def updateNewsSummary():
 				payload_json = json.loads(payload_native)
 			print("payload_json type is")
 			print(type(payload_json))
+			print(payload_json)
 			print("-"*80)
 			rec_ofAsked = i["id"] #Airtable record with query
 			row_output = newsSummarized(payload_json) #Summarized data

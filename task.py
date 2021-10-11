@@ -146,7 +146,10 @@ def updateNewsSummary():
 			print("payload_native is ")
 			print(payload_native)
 			print("="*80)
-			payload_json = json.loads(payload_native)
+			if isinstance(payload_native,list) or isinstance(payload_native,dict):
+				payload_json = payload_native
+			else:
+				payload_json = json.loads(payload_native)
 			rec_ofAsked = i["id"] #Airtable record with query
 			row_output = newsSummarized(payload_json) #Summarized data
 			print('Row complete..')

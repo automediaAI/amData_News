@@ -10,7 +10,7 @@ inflection==0.5.1
 jmespath==0.10.0
 langdetect==1.0.8
 newsapi-python==0.2.6
-Pillow==8.1.0
+Pillow==8.3.2
 praw==7.1.3
 prawcore==1.5.0
 profanityfilter==2.0.6
@@ -20,7 +20,7 @@ s3transfer==0.3.4
 six==1.15.0
 soupsieve==2.1
 update-checker==0.18.0
-urllib3==1.26.3
+urllib3==1.26.5
 websocket-client==0.57.0
 torch==1.9.0+cpu
 torchvision==0.10.0+cpu

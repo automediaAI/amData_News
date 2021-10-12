@@ -105,7 +105,7 @@ def newsSummarized(allList):
 		article_content = news_article["content_article"] #Getting content earlier to summarize
 		summarized_content = summarization_caller(article_content) #Pulling summary data based on content
 		#logic to see if to use summary or not, will refine more later
-		if len(summarized_content) < article_content:
+		if len(summarized_content) < len(article_content):
 			news_article["summarized_article"] = summarized_content
 		else:
 			news_article["summarized_article"] = article_content

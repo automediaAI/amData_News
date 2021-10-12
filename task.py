@@ -89,13 +89,13 @@ def dumpData(table_output, filename_pre):
 
 # Running through rows of news, calling newsAPI, uploading data back
 def updateNewsLoop():
-	print ('Started loop..') #Extra to keep app going 
+	print('Started updateNewsLoop loop..') #Extra to keep app going 
 	table_output = [] #Final data of entire pull
 	allRecords = airtable_news.get_all() #Get all records 
-	print ('All records recieved..') #Extra to keep app going 
+	print('All records recieved in updateNewsLoop..') #Extra to keep app going 
 	for i in allRecords:
 		if "Prod_Ready" in i["fields"]: #Only working on prod ready ie checkboxed
-			print ('Started row..') #Extra to keep app going 
+			print('Started row..') #Extra to keep app going 
 			if "Service" in i["fields"]:
 				# Basic payload, common to all
 				payload_native = i["fields"]["payload"]
@@ -121,7 +121,7 @@ def updateNewsLoop():
 				else:
 					row_output = "🚫Query requested is invalid"
 				# Appending rest
-				print ('Row data done..') #Extra to keep app going 	
+				print('Row data done in updateNewsLoop..') #Extra to keep app going 	
 				try:
 					table_output.append(row_output) #Adding to all data
 				except Exception:
@@ -131,17 +131,17 @@ def updateNewsLoop():
 				data_toUpload = row_output #Uploading clean data
 				# data_toUpload = row_output #Uploading clean data
 				uploadData(data_toUpload, rec_ofAsked) #Upload back to Airtable 
-				print('Row complete..')
+				print('Row complete in updateNewsLoop..')
 	dumpData(table_output, "NewsCleanUnsummarized")
 
 def updateNewsSummary():
-	print ('Started loop..') #Extra to keep app going 
+	print('Started loop in updateNewsSummary..') #Extra to keep app going 
 	table_output = [] #Final data of entire pull
 	allRecords = airtable_news.get_all() #Get all records 
-	print ('All records recieved..') #Extra to keep app going 
+	print('All records recieved in updateNewsSummary..') #Extra to keep app going 
 	for i in allRecords:
 		if "Prod_Ready" in i["fields"]: #Only working on prod ready ie checkboxed
-			print ('Started row..') #Extra to keep app going 
+			print('Started row in updateNewsSummary..') #Extra to keep app going 
 			payload_native = i["fields"]["output"] #Getting column on unsummarized data
 			if isinstance(payload_native,list) or isinstance(payload_native,dict):
 				payload_json = payload_native
@@ -149,7 +149,7 @@ def updateNewsSummary():
 				payload_json = eval(payload_native)
 			rec_ofAsked = i["id"] #Airtable record with query
 			row_output = newsSummarized(payload_json) #Summarized data
-			print('Row complete..')
+			print('Row complete in updateNewsSummary..')
 			table_output.append(row_output) #Adding to all data
 	dumpData(table_output, "NewsSummarized")
 

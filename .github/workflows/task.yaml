@@ -1,4 +1,4 @@
-name: task runner
+name: the task runner
 
 on:
   push:

@@ -62,7 +62,7 @@ def bingnewscaller(input_config, queryName):
         mercury_data = mercury_caller(url_to_check) #Getting Data from Mercury
         news_article_content = ""
         if mercury_data == 'error':
-            print ('🚫Article skipped since Mercury crapped out')
+            print('🚫Article skipped since Mercury crapped out')
         else:
             news_article_content_mercury = mercury_data['content_article'] #To get only content of article from mercury dict
             urtToImage_article_mercury = mercury_data['urtToImage_article'] #To get higher s

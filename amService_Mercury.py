@@ -62,6 +62,8 @@ def mercury_caller(article_in):
 
 	else:
 		print('🚫Mercury API has crapped out, didnt return anything')
+		print('🚫Mercury failed for the following URL - ')
+		print(url_in)
 		mercurized_article_data = "error"
 		return mercurized_article_data
 

@@ -73,7 +73,7 @@ def bingnewscaller(input_config, queryName):
             # print(summarizer_content)
 
         try: news_article_content_mercury
-        except NameError: news_article_content_mercury = None
+        except NameError: keywords_ner = None
         else:
             keywords_ner = ner_caller(news_article_content_mercury)
 

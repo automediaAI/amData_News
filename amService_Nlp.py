@@ -19,8 +19,8 @@ def ner_caller(article_in):
     return_list = []
     doc = nlp(article_in)
     for ent in doc.ents:
-        print(ent.text, ent.start_char, ent.end_char, ent.label_)
-        if ent.label_ not in ner_ban_list:
+        # print(ent.text, ent.start_char, ent.end_char, ent.label_)
+        if ent.label_ not in ner_ban_list and ent.text not in return_list:
             return_list.append(ent.text)
     return return_list # returns empty list if nothing found
 

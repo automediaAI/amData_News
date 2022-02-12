@@ -13,6 +13,7 @@ import os
 import requests
 
 from amService_Mercury import mercury_caller #Mercury service to value add article data
+from amService_Nlp import ner_caller
 # from amService_Summarizer import summarization_caller #Summarization service to create summary
 
 #Bing Credentials 
@@ -35,10 +36,10 @@ def pidRemover(url_in):
 # Function for calling NewsAPI 
 def bingnewscaller(input_config, queryName):
     ## Query payload creation
-    endpoint_name = input_config['endpoint'] 
+    endpoint_name = input_config['endpoint']
     endpoint = endpoint_list[endpoint_name]
     query_params = input_config['query']
-    params = query_params   
+    params = query_params
 
     ## Calling the API 
     try:
@@ -71,6 +72,11 @@ def bingnewscaller(input_config, queryName):
             # summarized_content = summarization_caller(news_article_content_mercury)
             # print(summarizer_content)
 
+        try: news_article_content_mercury
+        except NameError: news_article_content_mercury = None
+        else:
+            keywords_ner = ner_caller(news_article_content_mercury)
+
         #taking most from BingAPI, adding from Mercury API
         output_article_single = {
                 'source_API'               : 'bing', 
@@ -84,6 +90,7 @@ def bingnewscaller(input_config, queryName):
                 'urtToImage_article'       : urtToImage_article_mercury, #Using mercury data instead
                 'publishedAt_article'      : news_article["datePublished"], #done
                 'content_article'          : news_article_content_mercury,
+                'keywords_article'         : keywords_ner,
                 # 'summarized_article'       : summarized_content,
                 }
         output_article_all.append(output_article_single)

@@ -13,7 +13,7 @@ summarizer = pipeline('summarization', model=model, tokenizer=tokenizer)
 # print(summarizer)
 # print('*'*80)
 
-###### Calle Summarization pipeline and get data ######
+###### Call Summarization pipeline and get data ######
 def summarization_caller(article_in):
 	# print(article_in)
 	default_summary = summarizer(article_in, truncation=True)

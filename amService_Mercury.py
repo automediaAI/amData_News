@@ -44,6 +44,15 @@ def mercury_caller(article_in):
 	
 	if response: #Using logic here that requests does validation for you https://realpython.com/python-requests/
 		page_data = response.json() #Data to save | Standards requests way of saving 
+		# print(page_data)
+		# print(page_data.get("error"))
+
+		if page_data.get("error"):
+			print('🚫Mercury API has crapped out, didnt return anything')
+			print('🚫Mercury failed for the following URL - ')
+			print(article_in)
+			mercurized_article_data = "error"
+			return mercurized_article_data
 
 		###### Compiling output ######
 		mercurized_article_data = {
@@ -63,12 +72,13 @@ def mercury_caller(article_in):
 	else:
 		print('🚫Mercury API has crapped out, didnt return anything')
 		print('🚫Mercury failed for the following URL - ')
-		print(url_in)
+		print(article_in)
 		mercurized_article_data = "error"
 		return mercurized_article_data
 
 
 # ##### Test ######
+# article_to_get = "https://www.msn.com/en-us/news/world/juan-orlando-hernández-ex-honduras-president-agrees-to-extradition-to-the-us/ar-AATTjm4"
 # article_to_get = "https://www.cnn.com/2020/02/15/us/sex-and-the-city-actress-lynn-cohen-dies-trnd/index.html"
 # article_to_get = "https://www.aa.com.tr/en/middle-east/israel-worried-by-us-plans-to-lift-icc-sanctions/2124920"
 # print(mercury_caller(article_to_get))

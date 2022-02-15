@@ -79,7 +79,7 @@ def bingnewscaller(input_config, queryName):
         else:
             try:
                 keywords_ner = ner_caller(news_article_content_mercury)
-            except e:
+            except Exception as ex:
                 print("NER Caller failed")
                 keywords_ner = None
 

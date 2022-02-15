@@ -57,6 +57,8 @@ def bingnewscaller(input_config, queryName):
     ## Organizing data
     output_article_all = []
     for news_article in articles_source:
+        # debug
+        print(news_article)
         # run mercury processing
         url_to_check = str(news_article["url"]).strip()
         # print('URL to mercury: ', url_to_check)

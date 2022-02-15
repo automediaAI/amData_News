@@ -77,7 +77,11 @@ def bingnewscaller(input_config, queryName):
         try: news_article_content_mercury
         except NameError: keywords_ner = None
         else:
-            keywords_ner = ner_caller(news_article_content_mercury)
+            try:
+                keywords_ner = ner_caller(news_article_content_mercury)
+            except e:
+                print("NER Caller failed")
+                keywords_ner = None
 
         #taking most from BingAPI, adding from Mercury API
         output_article_single = {

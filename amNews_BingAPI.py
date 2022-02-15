@@ -46,6 +46,9 @@ def bingnewscaller(input_config, queryName):
         response = requests.get(endpoint, headers=headers, params=params)
         response.raise_for_status()
         source = response.json()
+        # debug
+        print("source - ")
+        print(source)
     except Exception as ex:
         print("🚫API crapped out") 
         source = {}
@@ -58,7 +61,7 @@ def bingnewscaller(input_config, queryName):
     output_article_all = []
     for news_article in articles_source:
         # debug
-        print(news_article)
+        # print(news_article)
         # run mercury processing
         url_to_check = str(news_article["url"]).strip()
         # print('URL to mercury: ', url_to_check)

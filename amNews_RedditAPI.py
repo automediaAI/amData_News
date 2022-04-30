@@ -20,7 +20,7 @@ reddit_client_secret = os.environ.get("PRIVATE_REDDIT_SECRET") #using public for
 reddit = praw.Reddit(
      client_id=reddit_client_id,
      client_secret=reddit_client_secret,
-     user_agent="am_agent_reddit_v1"
+     user_agent='am_agent_reddit_v1'
 )
 
 # Function to give back submissions in ordered list
@@ -66,7 +66,10 @@ def all_posts(subreddit_name, sort_order, items_limit, queryName):
 # Task function to call and get posts from Reddit
 def get_posts(reddit_query, queryName):
 	payload = reddit_query['query']
+	print ("Payload -----", payload)
+	print ("Payload TYPE -----", type(payload))
 	posts_returned = all_posts(payload['subreddit_name'], payload['sort_order'], payload['items_limit'], queryName)
+	print ("Posts returned -----", posts_returned)
 	return posts_returned
 
 # Task function to call Mercury and
@@ -77,7 +80,7 @@ def redditCallerNews(reddit_query, queryName):
 	if reddit_query['query']['items_limit']:
 		count_asked = reddit_query['query']['items_limit']
 	else:
-		count_asked = 6
+		count_asked = 10
 	#Getting Mercury data for reddit articles
 	for article in reddit_LinkList:
 		url_to_check = article['submission_url']
@@ -123,12 +126,12 @@ def redditCallerImage(reddit_query, queryName):
 		return reddit_ImageList[:count_asked] #if more items than asked
 
 # Testing
-# reddit_query1 = {'query':{
-# 	# Testing
-# 	'subreddit_name':"worldnews", #should come from API
-# 	'sort_order':"new",
-# 	'items_limit':5
-# }}
-# queryName1 = "World News"
+reddit_query1 = {'query':{
+	# Testing
+	'subreddit_name':"news", #should come from API
+	'sort_order':"new",
+	'items_limit':5
+}}
+queryName1 = "World News"
 
-# print(redditCallerNews(reddit_query1, queryName1))
+print(redditCallerNews(reddit_query1, queryName1))

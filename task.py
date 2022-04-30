@@ -19,7 +19,8 @@ from datetime import date, datetime, timedelta
 from amNews_NewsAPI import newscaller
 from amNews_BingAPI import bingnewscaller
 from amNews_RedditAPI import redditCallerNews, redditCallerImage
-from amLibrary_Filters import newsClean, newsSummarized
+# from amLibrary_Filters import newsClean, newsSummarized
+from amLibrary_Filters import newsClean
 
 ## Airtable settings 
 base_key = os.environ.get("PRIVATE_BASE_KEY")
@@ -91,6 +92,7 @@ def dumpData(table_output, filename_pre):
 def updateNewsLoop():
 	print('Started updateNewsLoop loop..') #Extra to keep app going 
 	table_output = [] #Final data of entire pull
+	table_output_unclean = [] #Data pulled directly without cleaning
 	allRecords = airtable_news.get_all() #Get all records 
 	print('All records recieved in updateNewsLoop..') #Extra to keep app going 
 	for i in allRecords:
@@ -121,9 +123,10 @@ def updateNewsLoop():
 				else:
 					row_output = "🚫Query requested is invalid"
 				# Appending rest
-				print('Row data done in updateNewsLoop..') #Extra to keep app going 	
+				print('Row data pull done in updateNewsLoop..') #Extra to keep app going 	
 				try:
 					table_output.append(row_output) #Adding to all data
+					table_output_unclean.append(row_output_unclean) #Adding to all data
 				except Exception:
 					print ("🚫Error saving article")
 					pass
@@ -131,33 +134,35 @@ def updateNewsLoop():
 				data_toUpload = row_output #Uploading clean data
 				# data_toUpload = row_output #Uploading clean data
 				uploadData(data_toUpload, rec_ofAsked) #Upload back to Airtable 
-				print('Row complete in updateNewsLoop..')
+				print('Row push to CMS complete in updateNewsLoop..')
 	dumpData(table_output, "NewsCleanUnsummarized")
+	dumpData(table_output_unclean, "NewsUnclean")
+	print('Row dump uploaded to cloud..')
 
-def updateNewsSummary():
-	print('Started loop in updateNewsSummary..') #Extra to keep app going 
-	table_output = [] #Final data of entire pull
-	allRecords = airtable_news.get_all() #Get all records 
-	print('All records recieved in updateNewsSummary..') #Extra to keep app going 
-	for i in allRecords:
-		if "Prod_Ready" in i["fields"]: #Only working on prod ready ie checkboxed
-			print('Started row in updateNewsSummary..') #Extra to keep app going 
-			payload_native = i["fields"]["output"] #Getting column on unsummarized data
-			if isinstance(payload_native, list) or isinstance(payload_native, dict):
-				payload_json = payload_native
-			else:
-				payload_json = eval(payload_native)
-			rec_ofAsked = i["id"] #Airtable record with query
-			row_output = newsSummarized(payload_json) #Summarized data
-			print('Row data complete in updateNewsSummary..')
-			
-			uploadData(row_output, rec_ofAsked) #Upload back to Airtable 
-			table_output.append(row_output) #Adding to all data
-			print('Row complete in updateNewsSummary..')
-	dumpData(table_output, "NewsSummarized")
 
+## Nitin function for news summary on entire news dump from amPayload_News
+# def updateNewsSummary():
+# 	print('Started loop in updateNewsSummary..') #Extra to keep app going 
+# 	table_output = [] #Final data of entire pull
+# 	allRecords = airtable_news.get_all() #Get all records 
+# 	print('All records recieved in updateNewsSummary..') #Extra to keep app going 
+# 	for i in allRecords:
+# 		if "Prod_Ready" in i["fields"]: #Only working on prod ready ie checkboxed
+# 			print('Started row in updateNewsSummary..') #Extra to keep app going 
+# 			payload_native = i["fields"]["output"] #Getting column on unsummarized data
+# 			if isinstance(payload_native, list) or isinstance(payload_native, dict):
+# 				payload_json = payload_native
+# 			else:
+# 				payload_json = eval(payload_native)
+# 			rec_ofAsked = i["id"] #Airtable record with query
+# 			row_output = newsSummarized(payload_json) #Summarized data
+# 			print('Row data complete in updateNewsSummary..')
+# 			uploadData(row_output, rec_ofAsked) #Upload back to Airtable 
+# 			table_output.append(row_output) #Adding to all data
+# 			print('Row complete in updateNewsSummary..')
+# 	dumpData(table_output, "NewsSummarized")
 
 print ('Entering news pull loop..')
 updateNewsLoop()
-print ('Entering news summary loop..')
-updateNewsSummary()
+# print ('Entering news summary loop..')
+# updateNewsSummary()

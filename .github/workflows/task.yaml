@@ -31,9 +31,9 @@ jobs:
     #   run: |
     #     python transformers_sshleifer_playground.py
     
-    - name: Run the Summarization task once to download the models
-      run: |
-        python amService_Summarizer.py
+    # - name: Run the Summarization task once to download the models
+    #   run: |
+    #     python amService_Summarizer.py
 
     - name: Run the overall task
       env:

@@ -46,10 +46,6 @@ UUID = 'NewsData-'+str(uuid.uuid1()) #to be used later
 #Uploads single json, or list to data_output of record ID as given
 def uploadData(inputDictList, recToUpdate):
 	recID = recToUpdate
-	# print ("DEBUG for UPLOAD DATA")
-	# print (inputDictList)
-	# print ("TYPE =====")
-	# print (type(inputDictList))
 	if isinstance(inputDictList, dict):
 		fields = {'output': json.dumps(inputDictList)}
 		# fields = {'data_output': str(inputDictList)} #Seems if I do str thats same too

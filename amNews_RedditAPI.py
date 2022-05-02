@@ -66,10 +66,7 @@ def all_posts(subreddit_name, sort_order, items_limit, queryName):
 # Task function to call and get posts from Reddit
 def get_posts(reddit_query, queryName):
 	payload = reddit_query['query']
-	print ("Payload -----", payload)
-	print ("Payload TYPE -----", type(payload))
 	posts_returned = all_posts(payload['subreddit_name'], payload['sort_order'], payload['items_limit'], queryName)
-	print ("Posts returned -----", posts_returned)
 	return posts_returned
 
 # Task function to call Mercury and
@@ -87,7 +84,7 @@ def redditCallerNews(reddit_query, queryName):
 		# print('URL to mercury: ', url_to_check)
 		mercury_data = mercury_caller(url_to_check) #Getting Data from Mercury
 		if mercury_data == 'error':
-			print ('🚫Article skipped since Mercury crapped out')
+			print ('🚫Article skipped since Mercury crapped out: ', url_to_check)
 		else:
 			article.update(mercury_data) #Adding all mercury data to article, it already has reddit data
 			# summarized_content = summarization_caller(article['content_article']) #Pulling summary data based on content
@@ -128,9 +125,9 @@ def redditCallerImage(reddit_query, queryName):
 # Testing
 reddit_query1 = {'query':{
 	# Testing
-	'subreddit_name':"news", #should come from API
-	'sort_order':"new",
-	'items_limit':5
+	'subreddit_name':"NFT", #should come from API
+	'sort_order':"top",
+	'items_limit':10
 }}
 queryName1 = "World News"
 

@@ -47,7 +47,7 @@ def all_submissions(posts_object, queryName):
 
 # Function that returns posts object
 def all_posts(subreddit_name, sort_order, items_limit, queryName):
-	get_extra = 20 #this will always get more posts than asked for in case data not good, then next functions return correct qty
+	get_extra = 10 #this will always get more posts than asked for in case data not good, then next functions return correct qty
 	subreddit = reddit.subreddit(subreddit_name)
 	sort_order = sort_order.lower()
 	if sort_order == "top":
@@ -125,10 +125,13 @@ def redditCallerImage(reddit_query, queryName):
 # Testing
 reddit_query1 = {'query':{
 	# Testing
-	'subreddit_name':"NFT", #should come from API
+	'subreddit_name':"CryptoNews", #should come from API
 	'sort_order':"top",
-	'items_limit':10
+	'items_limit':5
 }}
-queryName1 = "World News"
+queryName1 = "Crypto News"
 
 print(redditCallerNews(reddit_query1, queryName1))
+# article_to_get = "https://www.carscoops.com/2022/05/what-do-you-prefer-in-dashboards-digital-analog-or-a-mix-of-the-two/" #This makes is crap out
+# # article_to_get = "https://www.newsobserver.com/money/new-car-prices-selling-below-msrp/" #This makes is crap out
+# print("Value of article ----- ", mercury_caller(article_to_get))

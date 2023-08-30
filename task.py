@@ -72,6 +72,7 @@ def dumpToS3(file_name, bucket='amnewsbucket', object_name=None):
     except ClientError as e:
         return ('🚫Error uploading to S3: '+str(e))
 
+
 def dumpData(table_output, filename_pre):
 	filename = (filename_pre + UUID+'.txt')
 	#Creating a local text file 
@@ -81,6 +82,18 @@ def dumpData(table_output, filename_pre):
 	url_s3_file = dumpToS3(filename) #uploading to S3 and getting file back
 	dumpToAirtable(url_s3_file) #Adding final output to service dump
 	os.remove(filename) #deleting file after upload
+	print('Dump Upload complete.')
+
+#Upload output to Local / MongoDB
+def dumpDataToDB(table_output, filename_pre):
+	filename = (filename_pre + UUID+'.txt')
+	#Creating a local text file 
+	f = open(filename,"w")
+	f.write( str(table_output) )
+	f.close()
+	# url_s3_file = dumpToS3(filename) #uploading to S3 and getting file back
+	# dumpToAirtable(url_s3_file) #Adding final output to service dump
+	# os.remove(filename) #deleting file after upload
 	print('Dump Upload complete.')
 
 
@@ -131,9 +144,11 @@ def updateNewsLoop():
 				# data_toUpload = row_output #Uploading clean data
 				uploadData(data_toUpload, rec_ofAsked) #Upload back to Airtable 
 				print('Row push to CMS complete in updateNewsLoop..')
-	dumpData(table_output, "NewsCleanUnsummarized")
-	dumpData(table_output_unclean, "NewsUnclean")
-	print('Row dump uploaded to cloud..')
+	# dumpData(table_output, "NewsCleanUnsummarized") #Older to send to S3
+	dumpDataToDB(table_output, "NewsCleanUnsummarized") #New to upload to Mongo / Local
+	# dumpData(table_output_unclean, "NewsUnclean") #Older to send to S3
+	dumpDataToDB(table_output_unclean, "NewsUnclean") #New to upload to Mongo / Local
+	print('News item Row dump uploaded to cloud and local file..')
 
 
 ## Nitin function for news summary on entire news dump from amPayload_News

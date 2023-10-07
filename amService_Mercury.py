@@ -3,12 +3,6 @@
 ###### Pulls data from Mercury API #####
 ########################################
  
-"""
-
-ToDo
-. BSoup needed? / HTML text string symbol 
-
-"""
 
 ###### Declarations ######
 
@@ -40,7 +34,7 @@ def mercury_caller(article_in):
 		url_in = endpoint_of_mercury_get+"?contentType=text&url="+article_in #Dont use this way, but works if needed since API supports it 
 		response = requests.get(url_in) 
 	else:
-		abort(400)
+		abort(400) #This abort is not correct since its not a defined function, actually is of flask. Instead use raise error 
 	
 	if response: #Using logic here that requests does validation for you https://realpython.com/python-requests/
 		page_data = response.json() #Data to save | Standards requests way of saving 
@@ -48,9 +42,7 @@ def mercury_caller(article_in):
 		# print(page_data.get("error"))
 
 		if page_data.get("error"):
-			print('🚫Mercury API has crapped out, didnt return anything')
-			print('🚫Mercury failed for the following URL - ')
-			print(article_in)
+			print('🚫 Mercury failed for URL:', str(article_in))
 			mercurized_article_data = "error"
 			return mercurized_article_data
 
@@ -70,9 +62,7 @@ def mercury_caller(article_in):
 		return mercurized_article_data #returns a dict
 
 	else:
-		print('🚫Mercury API has crapped out, didnt return anything')
-		print('🚫Mercury failed for the following URL - ')
-		print(article_in)
+		print('🚫 Mercury failed for URL:', str(article_in))
 		mercurized_article_data = "error"
 		return mercurized_article_data
 

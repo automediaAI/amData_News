@@ -8,6 +8,10 @@
 #############
 
 
+### CHECKS 
+## Is it optimal to save in JSON then pull back, vs just keeping it all in memory in TinyDB? 
+
+
 ## Declarations 
 import os
 import json
@@ -19,7 +23,9 @@ from datetime import date, datetime, timedelta
 from amNews_NewsAPI import newscaller
 from amNews_BingAPI import bingnewscaller
 from amNews_RedditAPI import redditCallerNews, redditCallerImage
-from amLibrary_Filters import newsClean, newsSummarized
+from amLibrary_Filters import newsClean, newsSummarized, newsCheckResult
+from tinydb import TinyDB, Query # To create local DB 
+from amService_Nlp import ner_caller
 
 ## Airtable settings 
 base_key = os.environ.get("PRIVATE_BASE_KEY")
@@ -29,7 +35,10 @@ api_key_airtable = os.environ.get("PRIVATE_API_KEY_AIRTABLE")
 airtable_news = Airtable(base_key, table_name_news, api_key_airtable)
 airtable_dump = Airtable(base_key, table_name_dump, api_key_airtable)
 
-## Amazon S3 settings 
+## Create a TinyDB instance and specify the database file
+db = TinyDB('NewsPull.json')
+
+## Amazon S3 settings  
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 aws_region='us-west-1' #Manual while creating the bucket 
@@ -41,6 +50,7 @@ s3 = boto3.client(
 )
 
 UUID = 'NewsData-'+str(uuid.uuid1()) #to be used later
+
 
 #Uploads single json, or list to data_output of record ID as given
 def uploadData(inputDictList, recToUpdate):
@@ -106,34 +116,91 @@ def updateNewsLoop():
 				# print(query_name)
 				# Calling News service per ask
 				if i["fields"]["Service"].lower()  == 'newsapi': #Only pulling if NewsAPI 	
-					row_output_unclean = newscaller(payload_json, query_name) #NewsAPI output for this call
-					row_output = newsClean(row_output_unclean)
+					row_output = newscaller(payload_json, query_name) #NewsAPI output for this call
+					# row_output = newsClean(row_output_unclean)
 				elif i["fields"]["Service"].lower()  == 'bing': #Only pulling if NewsAPI 	
-					row_output_unclean = bingnewscaller(payload_json, query_name) #NewsAPI output for this call
+					row_output = bingnewscaller(payload_json, query_name) #NewsAPI output for this call
 					# row_output = row_output_unclean
-					row_output = newsClean(row_output_unclean)
+					# row_output = newsClean(row_output_unclean)
 				elif i["fields"]["Service"].lower()  == 'reddit': #Only pulling if Reddit	
-					row_output_unclean = redditCallerNews(payload_json, query_name) #NewsAPI output for this call
-					row_output = newsClean(row_output_unclean)
+					row_output = redditCallerNews(payload_json, query_name) #NewsAPI output for this call
+					# row_output = newsClean(row_output_unclean)
 				elif i["fields"]["Service"].lower()  == 'redditimage': #Only pulling if Reddit	
-					row_output_unclean = redditCallerImage(payload_json, query_name) #NewsAPI output for this call
-					row_output = row_output_unclean
+					row_output = redditCallerImage(payload_json, query_name) #NewsAPI output for this call
+					# row_output = row_output_unclean
 				else:
-					row_output = "🚫Query requested is invalid"
+					row_output = "🚫 Query requested is invalid"
 				# Appending rest
 				print('Row data done in updateNewsLoop..') #Extra to keep app going 	
 				try:
 					table_output.append(row_output) #Adding to all data
 				except Exception:
-					print ("🚫Error saving article")
+					print ("🚫 Error saving article")
 					pass
 				## Running Text Cleaning and Image Cleaning functions 
 				data_toUpload = row_output #Uploading clean data
+				
+				## Update to tinyDB
+				for data_TinyDBNews in data_toUpload:
+					db.insert(data_TinyDBNews)
+				print('Row output pushed to TinyDB')
+				
 				# data_toUpload = row_output #Uploading clean data
 				uploadData(data_toUpload, rec_ofAsked) #Upload back to Airtable 
-				print('Row complete in updateNewsLoop..')
-	dumpData(table_output, "NewsCleanUnsummarized")
+				print('Row output pushed to Airtable')
 
+
+	# dumpData(table_output, "NewsCleanUnsummarized") #Upload dump to S3 as text
+
+
+## Basic function that just pulls the TinyDB created JSON and 
+
+
+## Loop doing all NER work in one go 
+def updateNER(key_for_NER):
+	# Load data from TinyDB
+	data = db.all()
+	for item in data:
+		news_article_content_mercury = item.get(key_for_NER, '')
+		try:
+			keywords_ner = ner_caller(news_article_content_mercury)
+		except Exception as ex:
+			print("NER Caller failed")
+			keywords_ner = None
+		# Update the keywords_article field
+		item['keywords_article'] = keywords_ner
+	# Write the modified data back to TinyDB
+	db.truncate()  # Clear the existing data
+	for item in data:
+		db.insert(item)  # Insert the updated records back
+	return None 
+
+	# ## Doing it the JSON file way 
+	# # Read the JSON file
+	# with open(input_file, 'r') as f:
+	# 	data = json.load(f)	
+	# # Modify the data
+	# with open(input_file, 'w') as f:
+	# 	json.dump(data, f, indent=4)
+
+
+## Loop doing all the News Clean Filters 
+def updateFilterCheck():
+	# Load data from TinyDB
+	data = db.all()
+	for item in data:
+		filter_check = newsCheckResult(item)
+		# Update the keywords_article field
+		item['filterCheck_Pass'] = filter_check 
+	# Write the modified data back to TinyDB
+	db.truncate()  # Clear the existing data
+	for item in data:
+		db.insert(item)  # Insert the updated records back
+	return None 
+
+
+
+## Using existing Spacy based summarizer 
 def updateNewsSummary():
 	print('Started loop in updateNewsSummary..') #Extra to keep app going 
 	table_output = [] #Final data of entire pull
@@ -157,7 +224,16 @@ def updateNewsSummary():
 	dumpData(table_output, "NewsSummarized")
 
 
-print ('Entering news pull loop..')
+## ACTUAL EXECUTION of Tasks in sequence 
+print ('======== [ Entering news pull loop]  ========')
 updateNewsLoop()
-print ('Entering news summary loop..')
-updateNewsSummary()
+
+print ('======== [ Entering data quality check]  ========')
+print ('======== FILTERS CHECK ========')
+updateFilterCheck()
+
+print ('======== [ Entering data enrichment]  ========')
+print ('======== Adding NER data ========')
+updateNER('description_article')
+# print ('======== Adding Summarized data ========')
+# updateNewsSummary()

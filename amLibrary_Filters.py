@@ -70,13 +70,13 @@ def getImageDetails(fileURL, location="online"):
 
 ## ImageSize Check - Returns True/False if size matches
 def checkImageSize(fileURL, checkSize, location="online"):
-    try:
-	    if imageExists(fileURL):
-	        imageSize = getImageDetails(fileURL, location)["size"]
-	        if (imageSize[0] >= checkSize[0]) and (imageSize[1] >= checkSize[1]):
-	            return True
-    except:
-    	return False
+	try:
+		if imageExists(fileURL):
+			imageSize = getImageDetails(fileURL, location)["size"]
+			if (imageSize[0] >= checkSize[0]) and (imageSize[1] >= checkSize[1]):
+				return True
+	except:
+		return False
 
 
 ### COMBO FUNCTIONS for News Items 
@@ -89,6 +89,27 @@ def newsCheck(rowDict):
 			return True
 	except KeyError:
 		pass
+
+## Function that returns a result of checking different checks
+def newsCheckResult(rowDict):
+    result_dict = {}  # Dictionary to store individual checks and overall result
+
+    # Check if title_article exists and meets conditions
+    result_dict['checkBlockWord_title'] = checkBlockWord(rowDict.get('title_article', ''))
+    result_dict['langEn_title'] = langEn(rowDict.get('title_article', ''))
+    result_dict['lenCheck_title'] = lenCheck(rowDict.get('title_article', ''), count=5)
+    result_dict['checkImageSize_title'] = checkImageSize(rowDict.get('urtToImage_article', ''), (10, 10))
+
+    # Check if all conditions for title_article are True
+    result_dict['READY'] = all(result_dict.values())
+
+    # # Append the result_dict to rowDict
+    # rowDict['filterCheck_Pass'] = result_dict # If should use or not
+
+    return result_dict
+
+
+
 
 # Returns smaller dict with clean data
 def newsClean(allDict):

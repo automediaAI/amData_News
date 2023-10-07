@@ -28,19 +28,34 @@ def all_submissions(posts_object, queryName):
 	submissions_list = []
 	# recIDcount = 0
 	for submission in posts_object:
+		# submission_dict = {
+		# 	# 'recID':recIDcount,
+		# 	'query_name': queryName, #Name of record in amPayload table
+		# 	'source_API': 'reddit',
+		# 	'reddit_title':submission.title,
+		# 	'reddit_body':submission.selftext,
+		# 	'reddit_score':submission.score,
+		# 	'reddit_id':submission.id,
+		# 	'reddit_comments_total':submission.num_comments,
+		# 	'reddit_created':submission.created,
+		# 	'submission_url':submission.url,
+		# 	'reddit_path':'https://www.reddit.com'+str(submission.permalink) #URL to post
+		# }
+
 		submission_dict = {
 			# 'recID':recIDcount,
 			'query_name': queryName, #Name of record in amPayload table
 			'source_API': 'reddit',
-			'reddit_title':submission.title,
-			'reddit_body':submission.selftext,
-			'reddit_score':submission.score,
-			'reddit_id':submission.id,
-			'reddit_comments_total':submission.num_comments,
-			'reddit_created':submission.created,
-			'submission_url':submission.url,
-			'reddit_path':'https://www.reddit.com'+str(submission.permalink) #URL to post
+			'reddit_title': getattr(submission, 'title', ''), # Modified to handle AttributeError
+			'reddit_body': getattr(submission, 'selftext', ''), # Modified to handle AttributeError
+			'reddit_score': getattr(submission, 'score', 0), # Modified to handle AttributeError and provide a default value
+			'reddit_id': getattr(submission, 'id', ''), # Modified to handle AttributeError
+			'reddit_comments_total': getattr(submission, 'num_comments', 0), # Modified to handle AttributeError and provide a default value
+			'reddit_created': getattr(submission, 'created', 0), # Modified to handle AttributeError and provide a default value
+			'submission_url': getattr(submission, 'url', ''), # Modified to handle AttributeError
+			'reddit_path': 'https://www.reddit.com' + str(getattr(submission, 'permalink', '')) #URL to post; Modified to handle AttributeError
 		}
+
 		submissions_list.append(submission_dict)
 		# recIDcount += 1
 	return submissions_list 
@@ -71,34 +86,42 @@ def get_posts(reddit_query, queryName):
 
 # Task function to call Mercury and
 def redditCallerNews(reddit_query, queryName):
+	print ("[[ Data being pulled from REDDIT API ]]")
 	# Getting redding submissions
 	reddit_LinkList = get_posts(reddit_query, queryName)
+	
 	# Quick check if item limit is given, since not using in NewsAPI - may evolve to remove later
-	if reddit_query['query']['items_limit']:
-		count_asked = reddit_query['query']['items_limit']
-	else:
-		count_asked = 6
+	count_asked = reddit_query['query'].get('items_limit', 6)
+	# if reddit_query['query']['items_limit']:
+	# 	count_asked = reddit_query['query']['items_limit']
+	# else:
+	# 	count_asked = 6
+	
 	#Getting Mercury data for reddit articles
 	for article in reddit_LinkList:
 		url_to_check = article['submission_url']
 		# print('URL to mercury: ', url_to_check)
 		mercury_data = mercury_caller(url_to_check) #Getting Data from Mercury
-		if mercury_data == 'error':
-			print ('🚫Article skipped since Mercury crapped out')
-		else:
-			article.update(mercury_data) #Adding all mercury data to article, it already has reddit data
+		
+		if mercury_data != 'error':
+			article.update(mercury_data)
+
+		# if mercury_data == 'error': # DELETE LATER 
+		# 	print ('🚫 Article skipped since Mercury crapped out') # DELETE LATER 
+		# else: # DELETE LATER 
+		# 	article.update(mercury_data) #Adding all mercury data to article, it already has reddit data
 			# summarized_content = summarization_caller(article['content_article']) #Pulling summary data based on content
 			# article["summarized_article"] = summarized_content #Adding summary data
 
 		source_news = url_to_sitename(url_to_check) #Getting Sitename from OpenGraph
-		if source_news: #If value is returned from Open Graph
-			article['source_article'] = source_news
-		else: #If nothing is returned from OpenGraph
-			article['source_article'] = ""
-	if len(reddit_LinkList) <= count_asked: #if less items than asked
-		return reddit_LinkList
-	else:
-		return reddit_LinkList[:count_asked] #if more items than asked
+		article['source_article'] = source_news if source_news else ""	
+		# if source_news: #If value is returned from Open Graph # DELETE LATER 
+		# 	article['source_article'] = source_news # DELETE LATER 
+		# else: #If nothing is returned from OpenGraph # DELETE LATER 
+		# 	article['source_article'] = "" # DELETE LATER 
+
+	# Returning the appropriate number of articles
+	return reddit_LinkList[:count_asked] if len(reddit_LinkList) > count_asked else reddit_LinkList
 
 def redditCallerImage(reddit_query, queryName):
 	# Quick check if item limit is given, since not using in NewsAPI - may evolve to remove later

@@ -37,4 +37,4 @@ x = ner_caller("""When Sebastian Thrun started working on self-driving cars at G
     A little less than a decade later, dozens of self-driving startups have cropped up 
     while automakers around the world clamor, wallet in hand, to secure their place in 
     the fast-moving world of fully automated transportation.""")
-print(x)
+# print(x)

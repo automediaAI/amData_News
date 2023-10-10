@@ -25,7 +25,8 @@ from amNews_BingAPI import bingnewscaller
 from amNews_RedditAPI import redditCallerNews, redditCallerImage
 from amLibrary_Filters import newsClean, newsSummarized, newsCheckResult
 from tinydb import TinyDB, Query # To create local DB 
-from amService_Nlp import ner_caller
+from amService_NLP import ner_caller
+from amService_ChatGPT import summarize_with_gpt 
 
 ## Airtable settings 
 base_key = os.environ.get("PRIVATE_BASE_KEY")
@@ -198,30 +199,48 @@ def updateFilterCheck():
 		db.insert(item)  # Insert the updated records back
 	return None 
 
-
-
-## Using existing Spacy based summarizer 
+## Using new ChatGPT based summarization 
 def updateNewsSummary():
-	print('Started loop in updateNewsSummary..') #Extra to keep app going 
-	table_output = [] #Final data of entire pull
-	allRecords = airtable_news.get_all() #Get all records 
-	print('All records recieved in updateNewsSummary..') #Extra to keep app going 
-	for i in allRecords:
-		if "Prod_Ready" in i["fields"]: #Only working on prod ready ie checkboxed
-			print('Started row in updateNewsSummary..') #Extra to keep app going 
-			payload_native = i["fields"]["output"] #Getting column on unsummarized data
-			if isinstance(payload_native, list) or isinstance(payload_native, dict):
-				payload_json = payload_native
-			else:
-				payload_json = eval(payload_native)
-			rec_ofAsked = i["id"] #Airtable record with query
-			row_output = newsSummarized(payload_json) #Summarized data
-			print('Row data complete in updateNewsSummary..')
+	# Load data from TinyDB
+	data = db.all()
+	for item in data:
+		news_article_content = item.get(content_article, '') if item.get('filterCheck_Pass', {}).get('READY', False) else ''
+		try:
+			summarized_text = summarize_with_gpt(news_article_content)
+		except Exception as ex:
+			print("ChatGPT summarization failed")
+			summarized_text = None
+		# Update the keywords_article field
+		item["summarized_article"] = summarized_text 
+	# Write the modified data back to TinyDB
+	db.truncate()  # Clear the existing data
+	for item in data:
+		db.insert(item)  # Insert the updated records back
+	return None 
+
+
+# ## Using existing Spacy based summarizer 
+# def updateNewsSummary():
+# 	print('Started loop in updateNewsSummary..') #Extra to keep app going 
+# 	table_output = [] #Final data of entire pull
+# 	allRecords = airtable_news.get_all() #Get all records 
+# 	print('All records recieved in updateNewsSummary..') #Extra to keep app going 
+# 	for i in allRecords:
+# 		if "Prod_Ready" in i["fields"]: #Only working on prod ready ie checkboxed
+# 			print('Started row in updateNewsSummary..') #Extra to keep app going 
+# 			payload_native = i["fields"]["output"] #Getting column on unsummarized data
+# 			if isinstance(payload_native, list) or isinstance(payload_native, dict):
+# 				payload_json = payload_native
+# 			else:
+# 				payload_json = eval(payload_native)
+# 			rec_ofAsked = i["id"] #Airtable record with query
+# 			row_output = newsSummarized(payload_json) #Summarized data
+# 			print('Row data complete in updateNewsSummary..')
 			
-			uploadData(row_output, rec_ofAsked) #Upload back to Airtable 
-			table_output.append(row_output) #Adding to all data
-			print('Row complete in updateNewsSummary..')
-	dumpData(table_output, "NewsSummarized")
+# 			uploadData(row_output, rec_ofAsked) #Upload back to Airtable 
+# 			table_output.append(row_output) #Adding to all data
+# 			print('Row complete in updateNewsSummary..')
+# 	dumpData(table_output, "NewsSummarized")
 
 
 ## ACTUAL EXECUTION of Tasks in sequence 
@@ -235,5 +254,6 @@ updateFilterCheck()
 print ('======== [ Entering data enrichment]  ========')
 print ('======== Adding NER data ========')
 updateNER('description_article')
-# print ('======== Adding Summarized data ========')
-# updateNewsSummary()
+print ('======== Adding Summarized data ========')
+updateNewsSummary()
+print ('======== [ Exiting news pull loop]  ========')

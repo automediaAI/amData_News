@@ -1,17 +1,14 @@
+#####################
+#### DEPRECATED SERVICE ##########
+##### now using ChatGPT instead ########
+################################
+
 import json
 
 from transformers import pipeline, AutoTokenizer, AutoModelForSeq2SeqLM
-
 tokenizer = AutoTokenizer.from_pretrained('facebook/bart-large-cnn')
-
 model = AutoModelForSeq2SeqLM.from_pretrained('facebook/bart-large-cnn')
-
 summarizer = pipeline('summarization', model=model, tokenizer=tokenizer)
-
-# Test 
-# print('*'*80)
-# print(summarizer)
-# print('*'*80)
 
 ###### Call Summarization pipeline and get data ######
 def summarization_caller(article_in):
@@ -24,3 +21,35 @@ def summarization_caller(article_in):
 	#         'short_summary': short_summary[0]['summary_text']}
 	# return default_summary Original, gives a list
 	return default_summary[0]["summary_text"] #Just text
+
+
+def summmary_ChatGPT(text):
+
+	# Preprocess the text
+	preprocessed_text = preprocess_text(text)
+	# Join preprocessed text back into a string
+	preprocessed_text_str = ' '.join(preprocessed_text)
+
+	# Summarize the text
+	summary = summarize_with_gpt(preprocessed_text_str)
+
+	# Perform NER
+	named_entities = perform_ner(preprocessed_text_str)
+
+
+## Testing 
+summary = summarization_caller("""When Sebastian Thrun started working on self-driving cars at Google in 2007,
+    few people outside of the company took him seriously. “I can tell you very senior 
+    CEOs of major American car companies would shake my hand and turn away because I 
+    wasn’t worth talking to,” said Thrun, now the co-founder and CEO of online higher 
+    education startup Udacity, in an interview with Recode earlier this week.
+
+    The Mona Lisa and the Statue of David were on display in the MOMA New York.
+
+    COVID-19 is a devastating virus currently ravaging the world.
+    
+    A little less than a decade later, dozens of self-driving startups have cropped up 
+    while automakers around the world clamor, wallet in hand, to secure their place in 
+    the fast-moving world of fully automated transportation.""")
+
+print("Summary:", summary)

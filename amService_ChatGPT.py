@@ -57,8 +57,8 @@ def summarize_with_gpt(text, max_tokens=50):
     print ('Response ---->>>', response)
     
     
-    # summary = response['choices'][0]['text'].strip()
-    summary = response['choices'][0]['text'].strip().decode('utf-8', 'replace')
+    summary = response['choices'][0]['text'].strip()
+    # summary = response['choices'][0]['text'].strip().decode('utf-8', 'replace')
 
     print("Summary CHATGPT>>", summary) 
     #Making sure returning smaller of response 
@@ -66,7 +66,8 @@ def summarize_with_gpt(text, max_tokens=50):
     # return summary_ToUse
 
     # Encode the summary using UTF-8
-    return summary_ToUse.encode('utf-8', errors='ignore')
+    # return summary_ToUse.encode('utf-8', errors='ignore')
+    return summary_ToUse
 
 # Test the results
 text_to_summarize = "This is a long piece of text that needs to be summarized"

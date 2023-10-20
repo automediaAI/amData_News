@@ -71,4 +71,7 @@ def mercury_caller(article_in):
 # article_to_get = "https://www.msn.com/en-us/news/world/juan-orlando-hernández-ex-honduras-president-agrees-to-extradition-to-the-us/ar-AATTjm4"
 # article_to_get = "https://www.cnn.com/2020/02/15/us/sex-and-the-city-actress-lynn-cohen-dies-trnd/index.html"
 # article_to_get = "https://www.aa.com.tr/en/middle-east/israel-worried-by-us-plans-to-lift-icc-sanctions/2124920"
+# article_to_get = "https://www.msn.com/en-us/money/realestate/another-housing-bubble-we-re-skating-close-to-one-says-realtorcom-economist/ar-AAWxwnD" #This makes is crap out
+# article_to_get = "https://www.carscoops.com/2022/05/what-do-you-prefer-in-dashboards-digital-analog-or-a-mix-of-the-two/" #This makes is crap out
+# article_to_get = "https://www.newsobserver.com/money/new-car-prices-selling-below-msrp/" #This makes is crap out
 # print(mercury_caller(article_to_get))

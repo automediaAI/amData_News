@@ -20,7 +20,7 @@ reddit_client_secret = os.environ.get("PRIVATE_REDDIT_SECRET") #using public for
 reddit = praw.Reddit(
      client_id=reddit_client_id,
      client_secret=reddit_client_secret,
-     user_agent="am_agent_reddit_v1"
+     user_agent='am_agent_reddit_v1'
 )
 
 # Function to give back submissions in ordered list
@@ -62,7 +62,7 @@ def all_submissions(posts_object, queryName):
 
 # Function that returns posts object
 def all_posts(subreddit_name, sort_order, items_limit, queryName):
-	get_extra = 20 #this will always get more posts than asked for in case data not good, then next functions return correct qty
+	get_extra = 10 #this will always get more posts than asked for in case data not good, then next functions return correct qty
 	subreddit = reddit.subreddit(subreddit_name)
 	sort_order = sort_order.lower()
 	if sort_order == "top":
@@ -96,7 +96,6 @@ def redditCallerNews(reddit_query, queryName):
 	# 	count_asked = reddit_query['query']['items_limit']
 	# else:
 	# 	count_asked = 6
-	
 	#Getting Mercury data for reddit articles
 	for article in reddit_LinkList:
 		url_to_check = article['submission_url']
@@ -146,12 +145,15 @@ def redditCallerImage(reddit_query, queryName):
 		return reddit_ImageList[:count_asked] #if more items than asked
 
 # Testing
-# reddit_query1 = {'query':{
-# 	# Testing
-# 	'subreddit_name':"worldnews", #should come from API
-# 	'sort_order':"new",
-# 	'items_limit':5
-# }}
-# queryName1 = "World News"
+reddit_query1 = {'query':{
+	# Testing
+	'subreddit_name':"CryptoNews", #should come from API
+	'sort_order':"top",
+	'items_limit':5
+}}
+queryName1 = "Crypto News"
 
-# print(redditCallerNews(reddit_query1, queryName1))
+print(redditCallerNews(reddit_query1, queryName1))
+# article_to_get = "https://www.carscoops.com/2022/05/what-do-you-prefer-in-dashboards-digital-analog-or-a-mix-of-the-two/" #This makes is crap out
+# # article_to_get = "https://www.newsobserver.com/money/new-car-prices-selling-below-msrp/" #This makes is crap out
+# print("Value of article ----- ", mercury_caller(article_to_get))

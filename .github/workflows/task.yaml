@@ -66,3 +66,4 @@ jobs:
           CHATGPT_API_KEY: ${{ secrets.CHATGPT_API_KEY }}
       run: |
         python task.py
+    - uses: gautamkrishnar/keepalive-workflow@master 

@@ -56,10 +56,6 @@ UUID = 'NewsData-'+str(uuid.uuid1()) #to be used later
 #Uploads single json, or list to data_output of record ID as given
 def uploadData(inputDictList, recToUpdate):
 	recID = recToUpdate
-	# print ("DEBUG for UPLOAD DATA")
-	# print (inputDictList)
-	# print ("TYPE =====")
-	# print (type(inputDictList))
 	if isinstance(inputDictList, dict):
 		fields = {'output': json.dumps(inputDictList)}
 		# fields = {'data_output': str(inputDictList)} #Seems if I do str thats same too
@@ -102,6 +98,7 @@ def dumpData(table_output, filename_pre):
 def updateNewsLoop():
 	print('Started updateNewsLoop loop..') #Extra to keep app going 
 	table_output = [] #Final data of entire pull
+	table_output_unclean = [] #Data pulled directly without cleaning
 	allRecords = airtable_news.get_all() #Get all records 
 	print('All records recieved in updateNewsLoop..') #Extra to keep app going 
 	for i in allRecords:
@@ -132,9 +129,10 @@ def updateNewsLoop():
 				else:
 					row_output = "🚫 Query requested is invalid"
 				# Appending rest
-				print('Row data done in updateNewsLoop..') #Extra to keep app going 	
+				print('Row data pull done in updateNewsLoop..') #Extra to keep app going 	
 				try:
 					table_output.append(row_output) #Adding to all data
+					table_output_unclean.append(row_output_unclean) #Adding to all data
 				except Exception:
 					print ("🚫 Error saving article")
 					pass
@@ -236,12 +234,11 @@ def updateNewsSummary():
 # 			rec_ofAsked = i["id"] #Airtable record with query
 # 			row_output = newsSummarized(payload_json) #Summarized data
 # 			print('Row data complete in updateNewsSummary..')
-			
+
 # 			uploadData(row_output, rec_ofAsked) #Upload back to Airtable 
 # 			table_output.append(row_output) #Adding to all data
 # 			print('Row complete in updateNewsSummary..')
 # 	dumpData(table_output, "NewsSummarized")
-
 
 ## ACTUAL EXECUTION of Tasks in sequence 
 print ('======== [ Entering news pull loop]  ========')

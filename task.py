@@ -146,8 +146,9 @@ def updateNewsLoop():
 				print('Row output pushed to TinyDB')
 				
 				# data_toUpload = row_output #Uploading clean data
-				uploadData(data_toUpload, rec_ofAsked) #Upload back to Airtable 
-				print('Row output pushed to Airtable')
+				# Not uploading to Airtable as above 100k char limit OR utf-8 noise
+				# uploadData(data_toUpload, rec_ofAsked) #Upload back to Airtable 
+				# print('Row output pushed to Airtable')
 
 
 	# dumpData(table_output, "NewsCleanUnsummarized") #Upload dump to S3 as text

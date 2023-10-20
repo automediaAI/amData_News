@@ -31,7 +31,7 @@ jobs:
     #   run: |
     #     python transformers_sshleifer_playground.py
     
-    - name: Run the Summarization task 
+    - name: Run the ChatGPT task for testing
       env:
             BING_SEARCH_V7_SUBSCRIPTION_KEY: ${{ secrets.BING_SEARCH_V7_SUBSCRIPTION_KEY }}
             PRIVATE_API_KEY_NEWSAPI: ${{ secrets.PRIVATE_API_KEY_NEWSAPI }}
@@ -66,4 +66,10 @@ jobs:
           CHATGPT_API_KEY: ${{ secrets.CHATGPT_API_KEY }}
       run: |
         python task.py
+
+    - uses: ncipollo/release-action@v1
+      with:
+        artifacts: "NewsPull.json"
+        bodyFile: "Today's News Compilation"
+
     - uses: gautamkrishnar/keepalive-workflow@master 

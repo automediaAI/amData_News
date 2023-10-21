@@ -22,8 +22,11 @@ def langDetect(string):
 
 ## Checks if Language is english 
 def langEn(string):
-	if langDetect(string) == "en":
-		return True
+	try:
+		if langDetect(string) == "en":
+			return True
+	except:
+		return False
 
 ## Checks if word in URL
 def checkWord(string, word):

@@ -67,9 +67,11 @@ jobs:
       run: |
         python task.py
 
-    - uses: ncipollo/release-action@v1
+    - uses: Shopify/upload-to-release@v1
       with:
-        artifacts: "NewsPull.json"
-        bodyFile: "Today's News Compilation"
+        name: NewsPull
+        path: "NewsPull.json"
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        content-type: application/json
 
     - uses: gautamkrishnar/keepalive-workflow@master 

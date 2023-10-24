@@ -67,7 +67,7 @@ jobs:
       run: |
         python task.py
 
-    - uses: Shopify/upload-to-release@v1
+    - uses: Shopify/upload-to-release@v1.0.1
       with:
         name: NewsPull
         path: "NewsPull.json"

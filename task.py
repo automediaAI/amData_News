@@ -204,7 +204,7 @@ def updateNewsSummary():
 	# Load data from TinyDB
 	data = db.all()
 	for item in data:
-		news_article_content = item.get(content_article, '') if item.get('filterCheck_Pass', {}).get('READY', False) else ''
+		news_article_content = item.get('content_article', '') if item.get('filterCheck_Pass', {}).get('READY', False) else ''
 		try:
 			summarized_text = summarize_with_gpt(news_article_content)
 		except Exception as ex:

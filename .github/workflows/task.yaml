@@ -85,12 +85,12 @@ jobs:
     #     token: ${{ secrets.AMDATA_NEWS_RELEASE_TOKEN }}
 
     - uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Development Build"
-          files: |
-            NewsPull.json
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "latest"
+        prerelease: true
+        title: "Development Build"
+        files: |
+          NewsPull.json
 
     - uses: gautamkrishnar/keepalive-workflow@master 

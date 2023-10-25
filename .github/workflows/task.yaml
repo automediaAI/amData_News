@@ -49,28 +49,48 @@ jobs:
     #   run: |
     #     python amService_ChatGPT.py
 
-    - name: Run the overall task
-      env:
-          BING_SEARCH_V7_SUBSCRIPTION_KEY: ${{ secrets.BING_SEARCH_V7_SUBSCRIPTION_KEY }}
-          PRIVATE_API_KEY_NEWSAPI: ${{ secrets.PRIVATE_API_KEY_NEWSAPI }}
-          PRIVATE_REDDIT_CLIENTID: ${{ secrets.PRIVATE_REDDIT_CLIENTID }}
-          PRIVATE_REDDIT_SECRET: ${{ secrets.PRIVATE_REDDIT_SECRET }}
-          MERCURY_POST_ENDPOINT: ${{ secrets.MERCURY_POST_ENDPOINT }}
-          MERCURY_GET_ENDPOINT: ${{ secrets.MERCURY_GET_ENDPOINT }}
-          PRIVATE_BASE_KEY: ${{ secrets.PRIVATE_BASE_KEY }}
-          PRIVATE_TABLE_NAME_NEWSPAYLOAD: ${{ secrets.PRIVATE_TABLE_NAME_NEWSPAYLOAD }}
-          PRIVATE_TABLE_NAME_SERVICEDUMP: ${{ secrets.PRIVATE_TABLE_NAME_SERVICEDUMP }}
-          PRIVATE_API_KEY_AIRTABLE: ${{ secrets.PRIVATE_API_KEY_AIRTABLE }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          CHATGPT_API_KEY: ${{ secrets.CHATGPT_API_KEY }}
-      run: |
-        python task.py
+    # - name: Run the overall task
+    #   env:
+    #       BING_SEARCH_V7_SUBSCRIPTION_KEY: ${{ secrets.BING_SEARCH_V7_SUBSCRIPTION_KEY }}
+    #       PRIVATE_API_KEY_NEWSAPI: ${{ secrets.PRIVATE_API_KEY_NEWSAPI }}
+    #       PRIVATE_REDDIT_CLIENTID: ${{ secrets.PRIVATE_REDDIT_CLIENTID }}
+    #       PRIVATE_REDDIT_SECRET: ${{ secrets.PRIVATE_REDDIT_SECRET }}
+    #       MERCURY_POST_ENDPOINT: ${{ secrets.MERCURY_POST_ENDPOINT }}
+    #       MERCURY_GET_ENDPOINT: ${{ secrets.MERCURY_GET_ENDPOINT }}
+    #       PRIVATE_BASE_KEY: ${{ secrets.PRIVATE_BASE_KEY }}
+    #       PRIVATE_TABLE_NAME_NEWSPAYLOAD: ${{ secrets.PRIVATE_TABLE_NAME_NEWSPAYLOAD }}
+    #       PRIVATE_TABLE_NAME_SERVICEDUMP: ${{ secrets.PRIVATE_TABLE_NAME_SERVICEDUMP }}
+    #       PRIVATE_API_KEY_AIRTABLE: ${{ secrets.PRIVATE_API_KEY_AIRTABLE }}
+    #       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #       CHATGPT_API_KEY: ${{ secrets.CHATGPT_API_KEY }}
+    #   run: |
+    #     python task.py
 
-    - name: Release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: "NewsPull.json"
-        token: ${{ secrets.AMDATA_NEWS_RELEASE_TOKEN }}
+    - uses: "finnp/create-file-action@master"
+      env:
+        FILE_NAME: "NewsPull.json"
+        FILE_DATA: "TESTING"
+
+    - name: NewsPull Artifact
+      uses: actions/upload-artifact@v3
+        with:
+          name: ssml-result
+          path: NewsPull.json
+
+    # - name: Release
+    #   uses: softprops/action-gh-release@v1
+    #   with:
+    #     files: "NewsPull.json"
+    #     token: ${{ secrets.AMDATA_NEWS_RELEASE_TOKEN }}
+
+    - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            NewsPull.json
 
     - uses: gautamkrishnar/keepalive-workflow@master 

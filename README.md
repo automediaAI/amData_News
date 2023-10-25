@@ -3,6 +3,10 @@
  - Uploads to CMS based on ask
  - See spec for more details  
 
+## IMPORTANT 
+For each row ie news item, check the item['filterCheck_Pass']['READY] = True 
+This means it has passed all filters, else reason is there in item['filterCheck_Pass']
+
  # How to works 
  - task.py runs main loop that goes through CMS news ask table 
  - this then calls respective news service to get data as dict

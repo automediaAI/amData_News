@@ -3,12 +3,6 @@
 ###### Pulls data from Mercury API #####
 ########################################
  
-"""
-
-ToDo
-. BSoup needed? / HTML text string symbol 
-
-"""
 
 ###### Declarations ######
 
@@ -32,51 +26,43 @@ endpoint_of_mercury_get = mercury_get
 def mercury_caller(article_in):
 
 	###### CALL API, PASS PAYLOAD, GET DATA, ENCODE TO JSON ######
-	try: ##New to handle cases of weird URLs
-		method_in = "POST" 
-		if method_in == "POST":
-			url_in = endpoint_of_mercury_post 
-			response = requests.post(url_in, json={'url': article_in, 'contentType': 'text'}) #tins API only takes text
-		elif method_in == "GET":
-			url_in = endpoint_of_mercury_get+"?contentType=text&url="+article_in #Dont use this way, but works if needed since API supports it 
-			response = requests.get(url_in) 
-		else:
-			abort(400)
-		
-		if response: #Using logic here that requests does validation for you https://realpython.com/python-requests/
-			page_data = response.json() #Data to save | Standards requests way of saving 
-			# print(page_data)
-			# print(page_data.get("error"))
+	method_in = "POST" 
+	if method_in == "POST":
+		url_in = endpoint_of_mercury_post 
+		response = requests.post(url_in, json={'url': article_in, 'contentType': 'text'}) #tins API only takes text
+	elif method_in == "GET":
+		url_in = endpoint_of_mercury_get+"?contentType=text&url="+article_in #Dont use this way, but works if needed since API supports it 
+		response = requests.get(url_in) 
+	else:
+		abort(400) #This abort is not correct since its not a defined function, actually is of flask. Instead use raise error 
+	
+	if response: #Using logic here that requests does validation for you https://realpython.com/python-requests/
+		page_data = response.json() #Data to save | Standards requests way of saving 
+		# print(page_data)
+		# print(page_data.get("error"))
 
-			if page_data.get("error"):
-				print('🚫Mercury API has crapped out, didnt return anything')
-				print('🚫Mercury failed for the following URL - ')
-				print(article_in)
-				mercurized_article_data = "error"
-				return mercurized_article_data
-
-			###### Compiling output ######
-			mercurized_article_data = {
-				"mercuryAPI_response"	: str(response.status_code), #todo do something with it
-				"url_article"			: str(page_data.get("url","")),
-				"title_article"			: str(page_data.get("title","")),
-				"description_article" 	: "",
-				"urtToImage_article"	: str(page_data.get("lead_image_url","")),
-				"publishedAt_article" 	: str(page_data.get("date_published","")),
-				"content_article" 		: str(page_data.get("content","")).strip(),
-				"article_author"		: str(page_data.get("author",""))
-				}
-
-			###### Output ######
-			return mercurized_article_data #returns a dict
-
-		else:
-			print('🚫Mercury API has crapped out, didnt return anything')
-			print('🚫Mercury failed for the following URL - ')
-			print(article_in)
+		if page_data.get("error"):
+			print('🚫 Mercury failed for URL:', str(article_in))
 			mercurized_article_data = "error"
 			return mercurized_article_data
-	except:
+
+		###### Compiling output ######
+		mercurized_article_data = {
+			"mercuryAPI_response"	: str(response.status_code), #todo do something with it
+			"url_article"			: str(page_data.get("url","")),
+			"title_article"			: str(page_data.get("title","")),
+			"description_article" 	: "",
+			"urtToImage_article"	: str(page_data.get("lead_image_url","")),
+			"publishedAt_article" 	: str(page_data.get("date_published","")),
+			"content_article" 		: str(page_data.get("content","")).strip(),
+			"article_author"		: str(page_data.get("author",""))
+			}
+
+		###### Output ######
+		return mercurized_article_data #returns a dict
+
+	else:
+		print('🚫 Mercury failed for URL:', str(article_in))
 		mercurized_article_data = "error"
 		return mercurized_article_data
 

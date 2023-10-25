@@ -1,6 +1,8 @@
 import spacy
 
+# Load spaCy model
 nlp = spacy.load("en_core_web_md")
+# nlp = spacy.load('en_core_web_sm') # Consider using small model
 
 ner_ban_list = [
     "PERCENT",
@@ -15,7 +17,7 @@ ner_ban_list = [
 ###### This ignores some NERs which are specified    ######
 ###### in the hardcoded list above                   ######
 def ner_caller(article_in):
-    # print(article_in)
+    # Process the text with spaCy
     return_list = []
     doc = nlp(article_in)
     for ent in doc.ents:
@@ -24,17 +26,20 @@ def ner_caller(article_in):
             return_list.append(ent.text)
     return return_list # returns empty list if nothing found
 
-x = ner_caller("""When Sebastian Thrun started working on self-driving cars at Google in 2007,
-    few people outside of the company took him seriously. “I can tell you very senior 
-    CEOs of major American car companies would shake my hand and turn away because I 
-    wasn’t worth talking to,” said Thrun, now the co-founder and CEO of online higher 
-    education startup Udacity, in an interview with Recode earlier this week.
 
-    The Mona Lisa and the Statue of David were on display in the MOMA New York.
+               
+## Testing             
+# x = ner_caller("""When Sebastian Thrun started working on self-driving cars at Google in 2007,
+#     few people outside of the company took him seriously. “I can tell you very senior 
+#     CEOs of major American car companies would shake my hand and turn away because I 
+#     wasn’t worth talking to,” said Thrun, now the co-founder and CEO of online higher 
+#     education startup Udacity, in an interview with Recode earlier this week.
 
-    COVID-19 is a devastating virus currently ravaging the world.
+#     The Mona Lisa and the Statue of David were on display in the MOMA New York.
+
+#     COVID-19 is a devastating virus currently ravaging the world.
     
-    A little less than a decade later, dozens of self-driving startups have cropped up 
-    while automakers around the world clamor, wallet in hand, to secure their place in 
-    the fast-moving world of fully automated transportation.""")
-print(x)
+#     A little less than a decade later, dozens of self-driving startups have cropped up 
+#     while automakers around the world clamor, wallet in hand, to secure their place in 
+#     the fast-moving world of fully automated transportation.""")
+# print(x)

@@ -67,11 +67,10 @@ jobs:
       run: |
         python task.py
 
-    - uses: Shopify/upload-to-release@v1.0.1
+    - name: Release
+      uses: softprops/action-gh-release@v1
       with:
-        name: NewsPull
-        path: "NewsPull.json"
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        content-type: application/json
+        files: "NewsPull.json"
+        token: ${{ secrets.AMDATA_NEWS_RELEASE_TOKEN }}
 
     - uses: gautamkrishnar/keepalive-workflow@master 

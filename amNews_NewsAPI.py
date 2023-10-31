@@ -54,7 +54,7 @@ def newscaller(input_config, queryName):
 		if mercury_data == 'error':
 			print('🚫 Article skipped since Mercury crapped out')
 			mercury_worked_status = False
-			news_article_content_mercury = news_article["urlToImage"] #Backup to NewsAPI
+			news_article_content_mercury = str(news_article.get("content", "")).strip() #Backup to NewsAPI
 			urtToImage_article_mercury = news_article["urlToImage"] #Backup to NewsAPI
 		else:
 			mercury_worked_status = True

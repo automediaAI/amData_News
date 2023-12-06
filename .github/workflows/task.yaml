@@ -1,10 +1,10 @@
 name: the task runner
 
-on:
-  push:
-  workflow_dispatch:
-  schedule:
-    - cron:  '00 03 * * *'
+#on:
+#  push:
+#  workflow_dispatch:
+#  schedule:
+#    - cron:  '00 03 * * *'
 
 jobs:
   build:
